@@ -1,2 +1,9 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run format and lint commands
 npm run format
 npm run lint
+
+# Stage only the files that were already staged
+git diff --name-only --cached | xargs git add
