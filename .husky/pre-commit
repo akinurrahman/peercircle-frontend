@@ -2,5 +2,3 @@
 npm run format
 npm run lint
 
-# Stage only the files that were already staged
-git diff --name-only --cached | xargs git add
