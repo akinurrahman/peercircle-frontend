@@ -1,12 +1,11 @@
-import React from 'react';
+import React from 'react'
 
 const Feed = () => {
-  const hello = 'something';
   return (
-    <div className="rounded-lg bg-blue-500 p-4 text-white shadow-md hover:bg-blue-600">
-      feed
+    <div className='bg-blue-500 p-4 text-white rounded-lg hover:bg-blue-600 shadow-md'>
+      
     </div>
-  );
-};
+  )
+}
 
-export default Feed;
+export default Feed
