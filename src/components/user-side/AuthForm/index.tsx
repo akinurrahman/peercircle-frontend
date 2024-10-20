@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useEffect } from "react"
+import { useRouter, usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Card,
   CardContent,
@@ -11,31 +11,36 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
-import { useTheme } from "next-themes";
-import WaveOverlay from "@/assets/overlays/waveOverlay";
-import { APP_NAME } from "@/constants/common.constants";
-import { imageConstant } from "@/constants/images.constants";
-import LogInForm from "./login-form";
-import SignUpForm from "./signup-form";
+} from "@/components/ui/card"
+import { ArrowRight } from "lucide-react"
+import Image from "next/image"
+import { useTheme } from "next-themes"
+import WaveOverlay from "@/assets/overlays/waveOverlay"
+import { APP_NAME } from "@/constants/common.constants"
+import { imageConstant } from "@/constants/images.constants"
+import LogInForm from "./login-form"
+import SignUpForm from "./signup-form"
 
-export default function AuthForm() {
-  const [activeTab, setActiveTab] = useState("login");
-  const router = useRouter();
-  const pathname = usePathname();
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+export default function Component() {
+  const [activeTab, setActiveTab] = useState("login")
+  const router = useRouter()
+  const pathname = usePathname()
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
 
   useEffect(() => {
-    setActiveTab(pathname.includes("signup") ? "signup" : "login");
-  }, [pathname]);
+    setActiveTab(pathname.includes("signup") ? "signup" : "login")
+  }, [pathname])
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    router.replace(value === "signup" ? "/signup" : "/login");
-  };
+    setActiveTab(value)
+    router.replace(value === "signup" ? "/signup" : "/login")
+  }
+
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100 p-4 dark:bg-inherit sm:p-6 md:p-8">
@@ -45,22 +50,34 @@ export default function AuthForm() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1 },
+              }}
               transition={{ duration: 0.5 }}
               className="relative z-10 flex h-full flex-col justify-center p-12 text-white"
             >
               {activeTab === "login" ? (
                 <>
-                  <h2 className="mb-6 text-4xl font-bold">
+                  <motion.h2
+                    variants={textVariants}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mb-6 text-4xl font-bold"
+                  >
                     Welcome Back to {APP_NAME}
-                  </h2>
-                  <p className="mb-8 text-xl text-blue-100">
+                  </motion.h2>
+                  <motion.p
+                    variants={textVariants}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mb-8 text-xl text-blue-100"
+                  >
                     Your academic marketplace awaits. Log in to connect with
                     peers, exchange resources, and elevate your learning
                     experience.
-                  </p>
+                  </motion.p>
                   <ul className="space-y-4">
                     {[
                       "Access your personalized dashboard",
@@ -69,9 +86,8 @@ export default function AuthForm() {
                     ].map((item, index) => (
                       <motion.li
                         key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 + index * 0.1 }}
+                        variants={textVariants}
+                        transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                         className="flex items-center"
                       >
                         <ArrowRight className="mr-2 size-5 text-blue-300" />
@@ -82,14 +98,22 @@ export default function AuthForm() {
                 </>
               ) : (
                 <>
-                  <h2 className="mb-6 text-4xl font-bold">
+                  <motion.h2
+                    variants={textVariants}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mb-6 text-4xl font-bold"
+                  >
                     Join the {APP_NAME} Community
-                  </h2>
-                  <p className="mb-8 text-xl text-blue-100">
+                  </motion.h2>
+                  <motion.p
+                    variants={textVariants}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mb-8 text-xl text-blue-100"
+                  >
                     Create an account to unlock a world of academic
                     opportunities. Connect, share, and thrive with fellow
                     students.
-                  </p>
+                  </motion.p>
                   <ul className="space-y-4">
                     {[
                       "Create your student profile",
@@ -98,9 +122,8 @@ export default function AuthForm() {
                     ].map((item, index) => (
                       <motion.li
                         key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 + index * 0.1 }}
+                        variants={textVariants}
+                        transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                         className="flex items-center"
                       >
                         <ArrowRight className="mr-2 size-5 text-blue-300" />
@@ -117,8 +140,6 @@ export default function AuthForm() {
           <Card className="w-full max-w-md border-none shadow-none">
             <CardHeader>
               <CardTitle className="flex items-center justify-center text-center text-3xl font-bold text-gray-800 dark:text-inherit">
-                {/* <Sparkles className="h-8 w-8 mr-2 text-blue-600" />
-                {APP_NAME} */}
                 <Image
                   src={isDark ? imageConstant.darkModeLogo : imageConstant.logo}
                   width={200}
@@ -144,12 +165,22 @@ export default function AuthForm() {
                     Sign Up
                   </TabsTrigger>
                 </TabsList>
-                <TabsContent value="login">
-                  <LogInForm />
-                </TabsContent>
-                <TabsContent value="signup">
-                  <SignUpForm />
-                </TabsContent>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <TabsContent value="login">
+                      <LogInForm />
+                    </TabsContent>
+                    <TabsContent value="signup">
+                      <SignUpForm />
+                    </TabsContent>
+                  </motion.div>
+                </AnimatePresence>
               </Tabs>
             </CardContent>
             <CardFooter className="text-center text-sm text-gray-600">
@@ -160,5 +191,5 @@ export default function AuthForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }
