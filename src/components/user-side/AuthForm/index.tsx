@@ -21,7 +21,7 @@ import { imageConstant } from "@/constants/images.constants";
 import LogInForm from "./login-form";
 import SignUpForm from "./signup-form";
 
-export default function Component() {
+const AuthForm = () => {
   const [activeTab, setActiveTab] = useState("login");
   const router = useRouter();
   const pathname = usePathname();
@@ -192,4 +192,6 @@ export default function Component() {
       </div>
     </div>
   );
-}
+};
+
+export default AuthForm;
