@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
@@ -11,36 +11,36 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { ArrowRight } from "lucide-react"
-import Image from "next/image"
-import { useTheme } from "next-themes"
-import WaveOverlay from "@/assets/overlays/waveOverlay"
-import { APP_NAME } from "@/constants/common.constants"
-import { imageConstant } from "@/constants/images.constants"
-import LogInForm from "./login-form"
-import SignUpForm from "./signup-form"
+} from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+import WaveOverlay from "@/assets/overlays/waveOverlay";
+import { APP_NAME } from "@/constants/common.constants";
+import { imageConstant } from "@/constants/images.constants";
+import LogInForm from "./login-form";
+import SignUpForm from "./signup-form";
 
 export default function Component() {
-  const [activeTab, setActiveTab] = useState("login")
-  const router = useRouter()
-  const pathname = usePathname()
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === "dark"
+  const [activeTab, setActiveTab] = useState("login");
+  const router = useRouter();
+  const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   useEffect(() => {
-    setActiveTab(pathname.includes("signup") ? "signup" : "login")
-  }, [pathname])
+    setActiveTab(pathname.includes("signup") ? "signup" : "login");
+  }, [pathname]);
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value)
-    router.replace(value === "signup" ? "/signup" : "/login")
-  }
+    setActiveTab(value);
+    router.replace(value === "signup" ? "/signup" : "/login");
+  };
 
   const textVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100 p-4 dark:bg-inherit sm:p-6 md:p-8">
@@ -191,5 +191,5 @@ export default function Component() {
         </div>
       </div>
     </div>
-  )
+  );
 }
