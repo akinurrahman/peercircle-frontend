@@ -6,7 +6,7 @@ import {
   defaultAuthenticationPath,
   defaultProtectedRoute,
   generateMatchers,
-} from "@/constants/config.constants";
+} from "@/constants/config.constant";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

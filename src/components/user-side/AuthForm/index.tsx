@@ -16,8 +16,8 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import WaveOverlay from "@/assets/overlays/waveOverlay";
-import { APP_NAME } from "@/constants/common.constants";
-import { imageConstant } from "@/constants/images.constants";
+import { APP_NAME } from "@/constants/common.constant";
+import { imageConstant } from "@/constants/images.constant";
 import LogInForm from "./login-form";
 import SignUpForm from "./signup-form";
 
