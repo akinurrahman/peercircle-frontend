@@ -6,6 +6,9 @@ import { Form } from "@/components/ui/form";
 import FormFieldWrapper from "@/components/common/FormFieldWrapper";
 import { Button } from "@/components/ui/button";
 import { ButtonLoader } from "@/components/common/loader/loader";
+import { handleSignUp } from "@/actions/auth/signup";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface SignUpField {
   label: string;
@@ -46,6 +49,7 @@ const signUpFields: SignUpField[] = [
 ];
 
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<SignUpSchemaType>({
     mode: "onTouched",
     defaultValues: {
@@ -62,9 +66,13 @@ const SignUpForm = () => {
   } = form;
 
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
-    await new Promise((res) => setTimeout(res, 5000));
-
-    console.log("data", data);
+    const res = await handleSignUp(data);
+    if (res.success) {
+      toast.success(res.data.message || `OTP has been sent to ${data?.email}`);
+      router.push(`/otp-verification?email=${data?.email}`);
+    } else {
+      toast.error(`Error: ${res.message}`);
+    }
   };
 
   return (

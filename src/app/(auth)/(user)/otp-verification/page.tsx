@@ -17,20 +17,30 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Mail, ArrowRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { handleOTPverification } from "@/actions/auth/otp_verification";
+import { toast } from "react-toastify";
+import { ButtonLoader } from "@/components/common/loader/loader";
 
-const OtpVarification = () => {
+const OtpVerification = () => {
+  const router = useRouter();
+  const searchParam = useSearchParams();
+  const email = searchParam.get("email");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Verify the OTP (simulate API call)
-    if (otp === "123456") {
-      console.log("OTP verified successfully!");
-      setError("");
+    setIsSubmitting(true);
+    const response = await handleOTPverification(email, otp);
+    setIsSubmitting(false);
+    if (response.success) {
+      toast.success(response.data.message);
+      router.push("/login");
     } else {
-      setError("Incorrect OTP. Please try again.");
+      setError(response.message);
+      toast.error(`Error: ${response.message}`);
     }
   };
 
@@ -104,10 +114,16 @@ const OtpVarification = () => {
               type="submit"
               variant="primary"
               className="w-full"
-              disabled={otp.length !== 6}
+              disabled={otp.length !== 6 || isSubmitting}
             >
-              Verify OTP
-              <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+              {isSubmitting ? (
+                <ButtonLoader loadingText="Verifying OTP..." />
+              ) : (
+                <>
+                  Verify OTP
+                  <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+                </>
+              )}
             </Button>
           </CardFooter>
         </form>
@@ -116,4 +132,4 @@ const OtpVarification = () => {
   );
 };
 
-export default OtpVarification;
+export default OtpVerification;
