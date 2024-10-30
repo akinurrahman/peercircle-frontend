@@ -56,3 +56,15 @@
     --chart-5: 340 75% 55%;
   }
 }
+
+:root {
+  --font-poppins: "Poppins", sans-serif;
+}
+
+body {
+  font-family: var(--font-poppins);
+}
+
+.font-roboto {
+  font-family: var(--font-roboto);
+}
