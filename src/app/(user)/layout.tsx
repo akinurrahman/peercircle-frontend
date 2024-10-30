@@ -13,10 +13,10 @@ export default function Layout({ children }: LayoutProps) {
       </aside>
 
       <main className="grow overflow-y-auto md:ml-[250px] lg:ml-[275px]">
-        <div className="mx-auto max-w-2xl p-4">{children}</div>
+        <div className="bg-red-400 p-4">{children}</div>
       </main>
 
-      <aside className="fixed inset-y-0 right-0 hidden w-1/4 overflow-y-auto lg:block">
+      <aside className="hidden w-1/4 overflow-y-auto lg:block">
         <div className="h-full bg-muted p-4">Aside Placeholder</div>
       </aside>
 
