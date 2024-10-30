@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import {
@@ -32,6 +32,12 @@ const OtpVerification = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) {
+      toast.error("Email not found. Redirecting to signup...");
+      router.push("/signup");
+      return;
+    }
+
     setIsSubmitting(true);
     const response = await handleOTPverification(email, otp);
     setIsSubmitting(false);
@@ -132,4 +138,10 @@ const OtpVerification = () => {
   );
 };
 
-export default OtpVerification;
+const SuspenseWrapper = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <OtpVerification />
+  </Suspense>
+);
+
+export default SuspenseWrapper;
