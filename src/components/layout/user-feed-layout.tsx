@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
 import Sidebar from "@/components/common/layout/sidebar";
 
-interface LayoutProps {
+interface LayoutWrapperProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <aside className="fixed inset-y-0 left-0 hidden w-[250px] overflow-y-auto md:block lg:w-[275px]">

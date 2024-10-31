@@ -1,7 +1,11 @@
-import React from "react";
+import UserProfile from "@/components/Profile/user-profile";
 
-const Profile = () => {
-  return <div>profile hello</div>;
-};
+// For public view
+export default function PublicProfilePage() {
+  return <UserProfile isPersonalView={false} />;
+}
 
-export default Profile;
+// For personal view
+// export default function PersonalProfilePage() {
+//   return <UserProfile isPersonalView={true} />
+// }
