@@ -7,7 +7,7 @@ import {
 } from "./common.schema";
 
 export const loginSchema = z.object({
-  usernameOrEmail: z
+  identifier: z
     .string()
     .refine(
       (val) =>
@@ -17,7 +17,9 @@ export const loginSchema = z.object({
         message: "Invalid username or email",
       }
     ),
-  password: passwordSchema,
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
 });
 
 export const signupSchema = z

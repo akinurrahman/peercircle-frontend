@@ -62,7 +62,8 @@ const SignUpForm = () => {
   });
   const {
     handleSubmit,
-    formState: { isSubmitting },
+    setError,
+    formState: { isSubmitting, errors },
   } = form;
 
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
@@ -71,7 +72,10 @@ const SignUpForm = () => {
       toast.success(res.data.message || `OTP has been sent to ${data?.email}`);
       router.push(`/otp-verification?email=${data?.email}`);
     } else {
-      toast.error(`Error: ${res.message}`);
+      setError("root", {
+        type: "manual",
+        message: res.message,
+      });
     }
   };
 
@@ -97,6 +101,9 @@ const SignUpForm = () => {
             " Signup"
           )}
         </Button>
+        {errors.root && (
+          <p className="mt-2 text-sm text-red-500">{errors.root.message}</p>
+        )}
       </form>
     </Form>
   );

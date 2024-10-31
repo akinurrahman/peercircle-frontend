@@ -39,8 +39,6 @@ export const asyncRequestHandler = async <T>(
       status: response.status,
     };
   } catch (error) {
-    console.error("Error occurred:", error);
-
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError<{ message?: string }>;
       if (!axiosError.response) {
