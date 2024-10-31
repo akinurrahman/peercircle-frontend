@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import {
@@ -17,15 +17,16 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Mail, ArrowRight } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { handleOTPverification } from "@/actions/auth/otp_verification";
 import { toast } from "react-toastify";
 import { ButtonLoader } from "@/components/common/loader/loader";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const OtpVerification = () => {
   const router = useRouter();
-  const searchParam = useSearchParams();
-  const email = searchParam.get("email");
+  const email = useSelector((state: RootState) => state.auth.email);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -137,10 +138,4 @@ const OtpVerification = () => {
   );
 };
 
-const SuspenseWrapper = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <OtpVerification />
-  </Suspense>
-);
-
-export default SuspenseWrapper;
+export default OtpVerification;

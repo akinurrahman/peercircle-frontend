@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./slices/auth.slice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    auth: authReducer,
+  },
 });
 
 // Export the store directly for the Provider in RootLayout

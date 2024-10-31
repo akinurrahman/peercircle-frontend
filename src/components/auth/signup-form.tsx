@@ -9,6 +9,9 @@ import { ButtonLoader } from "@/components/common/loader/loader";
 import { handleSignUp } from "@/actions/auth/signup";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setEmail } from "@/store/slices/auth.slice";
+import { AppDispatch } from "@/store";
 
 interface SignUpField {
   label: string;
@@ -49,6 +52,7 @@ const signUpFields: SignUpField[] = [
 ];
 
 const SignUpForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const form = useForm<SignUpSchemaType>({
     mode: "onTouched",
@@ -69,8 +73,9 @@ const SignUpForm = () => {
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
     const res = await handleSignUp(data);
     if (res.success) {
+      dispatch(setEmail(data.email));
       toast.success(res.data.message || `OTP has been sent to ${data?.email}`);
-      router.push(`/otp-verification?email=${data?.email}`);
+      router.push(`/otp-verification`);
     } else {
       setError("root", {
         type: "manual",
@@ -96,7 +101,7 @@ const SignUpForm = () => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <ButtonLoader loadingText="Creating account..." />
+            <ButtonLoader loadingText="Sending OTP..." />
           ) : (
             " Signup"
           )}
