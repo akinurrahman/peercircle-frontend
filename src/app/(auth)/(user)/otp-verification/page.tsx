@@ -61,9 +61,8 @@ const OtpVerification = () => {
             Verify Your Account
           </CardTitle>
           <CardDescription className="text-center">
-            We&apos;ve sent a 6-digit verification code to your email
-            (akinurrahman@gmail.com). Enter it below to complete your
-            registration.
+            We&apos;ve sent a 6-digit verification code to your email ({email}).
+            Enter it below to complete your registration.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>

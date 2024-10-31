@@ -10,9 +10,10 @@ import {
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
 
   // Get the authentication token from cookies
-  const token = req.cookies.get("token")?.value;
+  const token = req.cookies.get(TOKEN_NAME)?.value;
 
   // 1. If user is authenticated (has a token) and tries to access an authentication route
   if (token && authenticationRoute.includes(pathname)) {
