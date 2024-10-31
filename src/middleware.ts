@@ -12,7 +12,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Get the authentication token from cookies
-  const token = req.cookies.get("auth-token")?.value;
+  const token = req.cookies.get("token")?.value;
 
   // 1. If user is authenticated (has a token) and tries to access an authentication route
   if (token && authenticationRoute.includes(pathname)) {

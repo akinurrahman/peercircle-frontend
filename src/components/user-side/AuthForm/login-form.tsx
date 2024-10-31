@@ -9,6 +9,7 @@ import { Form } from "@/components/ui/form";
 import { handleLogin } from "@/actions/auth/login";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { setToken } from "@/utils/token";
 
 const LogInForm = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const LogInForm = () => {
     const response = await handleLogin(data);
     if (response.success) {
       toast.success(response.data.message);
+      setToken(response.data.token);
       router.push("/feed");
     } else {
       setError("root", {
