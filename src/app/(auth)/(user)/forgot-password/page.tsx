@@ -42,7 +42,7 @@ const ForgotPassword = () => {
     const response = await handleForgotPassword(data);
     if (response.success) {
       dispatch(setEmail(data.email));
-      router.push("/otp-verification?type=forgot-password");
+      router.replace("/otp-verification?type=forgot-password");
     } else {
       setError("root", {
         type: "manual",

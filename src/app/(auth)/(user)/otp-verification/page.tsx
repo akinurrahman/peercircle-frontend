@@ -18,18 +18,19 @@ import {
 } from "@/components/ui/input-otp";
 import { Mail, ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  handleForgotPasswordOTPverification,
-  handleOTPverification,
-} from "@/actions/auth/otp_verification";
+
 import { toast } from "react-toastify";
 import { ButtonLoader } from "@/components/common/loader/loader";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import { setToken } from "@/utils/token";
+import { setResetToken } from "@/store/slices/auth.slice";
+import { handleOTPverification } from "@/actions/auth/signup";
+import { handleForgotPasswordOTPverification } from "@/actions/auth/forgot-password";
 
 const OtpVerification = () => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.auth.email);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -42,7 +43,7 @@ const OtpVerification = () => {
 
     if (!email) {
       toast.error("Email not found. Redirecting...");
-      router.push("/signup");
+      router.replace("/signup");
       return;
     }
 
@@ -57,7 +58,9 @@ const OtpVerification = () => {
     if (response.success) {
       toast.success(response.data.message);
       if (type === "signup") setToken(response.data.token);
-      router.push(type === "signup" ? "/feed" : "/reset-password");
+      if (type === "forgot-password")
+        dispatch(setResetToken(response.data.reset_token));
+      router.replace(type === "signup" ? "/feed" : "/reset-password");
     } else {
       setError(response.message);
       toast.error(`Error: ${response.message}`);

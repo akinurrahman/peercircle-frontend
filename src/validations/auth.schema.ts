@@ -45,11 +45,11 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    password: passwordSchema,
+    new_password: passwordSchema,
     confirm_password: z.string(),
   })
-  .superRefine(({ confirm_password, password }, ctx) => {
-    if (confirm_password !== password) {
+  .superRefine(({ confirm_password, new_password }, ctx) => {
+    if (confirm_password !== new_password) {
       ctx.addIssue({
         code: "custom",
         message: "The passwords did not match",

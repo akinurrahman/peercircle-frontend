@@ -15,18 +15,40 @@ import {
   resetPasswordSchema,
 } from "@/validations/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { handleResetPassword } from "@/actions/auth/forgot-password";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { ButtonLoader } from "@/components/common/loader/loader";
 
 const ResetPassword = () => {
+  const router = useRouter();
+  const { reset_token } = useSelector((state: RootState) => state.auth);
   const form = useForm<ResetPasswordFormData>({
     mode: "onTouched",
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      password: "",
+      new_password: "",
       confirm_password: "",
     },
   });
-  const onSubmit: SubmitHandler<ResetPasswordFormData> = (data) => {
-    console.log(data);
+
+  const {
+    formState: { errors, isSubmitting },
+    setError,
+  } = form;
+  const onSubmit: SubmitHandler<ResetPasswordFormData> = async (data) => {
+    const response = await handleResetPassword({ ...data, reset_token });
+    if (response.success) {
+      router.replace("/login");
+      toast.success("Password reset successfully! Login to Continue");
+    } else {
+      setError("root", {
+        type: "manual",
+        message: response.message,
+      });
+    }
   };
   return (
     <div className="container mx-auto flex min-h-screen items-center justify-center">
@@ -42,7 +64,7 @@ const ResetPassword = () => {
                 <FormFieldWrapper
                   fieldType="input"
                   type="password"
-                  name="password"
+                  name="new_password"
                   placeholder="New password"
                 />
                 <FormFieldWrapper
@@ -52,10 +74,24 @@ const ResetPassword = () => {
                   placeholder="Confirm new password"
                 />
 
-                <Button type="submit" variant="primary" className="w-full">
-                  Reset Password
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  variant="primary"
+                  className="w-full"
+                >
+                  {isSubmitting ? (
+                    <ButtonLoader loadingText="Resetting Password..." />
+                  ) : (
+                    "Reset Password"
+                  )}
                 </Button>
               </div>
+              {errors.root && (
+                <p className="mt-2 text-sm text-red-500">
+                  {errors.root.message}
+                </p>
+              )}
             </form>
           </Form>
         </CardContent>

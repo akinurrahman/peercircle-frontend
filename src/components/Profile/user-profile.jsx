@@ -11,9 +11,7 @@ import ItemsForSaleSection from "./items-for-sale-section";
 import AchievementPopup from "./achivement-popup";
 import StatsSection from "./stats-section";
 
-export default function UserProfile({
-  isPersonalView = false,
-}) {
+export default function UserProfile({ isPersonalView = false }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [showAchievement, setShowAchievement] = useState(false);
   const userInfo = {
