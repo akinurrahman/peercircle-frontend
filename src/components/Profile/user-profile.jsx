@@ -13,12 +13,9 @@ import StatsSection from "./stats-section";
 
 export default function UserProfile({
   isPersonalView = false,
-}: {
-  isPersonalView?: boolean;
 }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [showAchievement, setShowAchievement] = useState(false);
-
   const userInfo = {
     name: "Sarah Johnson",
     username: "sarahcodes",
