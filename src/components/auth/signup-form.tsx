@@ -31,14 +31,14 @@ const signUpFields: SignUpField[] = [
   {
     label: "Email",
     name: "email",
-    placeholder: "enter your email",
+    placeholder: "Enter your email",
     required: true,
   },
 
   {
     label: "Password",
     name: "password",
-    placeholder: "enter your password",
+    placeholder: "Enter your password",
     required: true,
     type: "password",
   },
@@ -75,7 +75,7 @@ const SignUpForm = () => {
     if (res.success) {
       dispatch(setEmail(data.email));
       toast.success(res.data.message || `OTP has been sent to ${data?.email}`);
-      router.push(`/otp-verification`);
+      router.push(`/otp-verification?type=signup`);
     } else {
       setError("root", {
         type: "manual",

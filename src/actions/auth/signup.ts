@@ -18,11 +18,6 @@ export const handleSignUp = async (data: SignUpSchemaType) => {
         user_email: data.email,
         password: data.password,
         confirm_password: data.confirmPassword,
-      },
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
       }
     );
   });

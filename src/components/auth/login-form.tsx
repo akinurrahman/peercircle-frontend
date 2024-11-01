@@ -52,11 +52,15 @@ const LogInForm = () => {
         <FormFieldWrapper
           label="Password"
           name="password"
-          placeholder="enter your password"
+          placeholder="Enter your password"
           type="password"
           required
         />
-        <button type="button" className="w-full text-right text-sm">
+        <button
+          type="button"
+          className="w-full text-right text-sm"
+          onClick={() => router.push("/forgot-password")}
+        >
           Forgot Password
         </button>
         <Button

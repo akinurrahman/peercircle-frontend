@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import {
@@ -17,12 +17,16 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Mail, ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { handleOTPverification } from "@/actions/auth/otp_verification";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  handleForgotPasswordOTPverification,
+  handleOTPverification,
+} from "@/actions/auth/otp_verification";
 import { toast } from "react-toastify";
 import { ButtonLoader } from "@/components/common/loader/loader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { setToken } from "@/utils/token";
 
 const OtpVerification = () => {
   const router = useRouter();
@@ -30,21 +34,30 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email) {
-      toast.error("Email not found. Redirecting to signup...");
+      toast.error("Email not found. Redirecting...");
       router.push("/signup");
       return;
     }
 
     setIsSubmitting(true);
-    const response = await handleOTPverification(email, otp);
+    const response =
+      type === "signup"
+        ? await handleOTPverification(email, otp)
+        : await handleForgotPasswordOTPverification(email, otp);
+
     setIsSubmitting(false);
+
     if (response.success) {
       toast.success(response.data.message);
-      router.push("/login");
+      if (type === "signup") setToken(response.data.token);
+      router.push(type === "signup" ? "/feed" : "/reset-password");
     } else {
       setError(response.message);
       toast.error(`Error: ${response.message}`);
@@ -59,11 +72,22 @@ const OtpVerification = () => {
             <Mail className="size-6 text-primary-foreground" />
           </div>
           <CardTitle className="text-center text-2xl font-bold">
-            Verify Your Account
+            {type === "signup" && "Verify Your Account"}
+            {type === "forgot-password" && "Reset Your Password"}
           </CardTitle>
           <CardDescription className="text-center">
-            We&apos;ve sent a 6-digit verification code to your email ({email}).
-            Enter it below to complete your registration.
+            {type === "signup" && (
+              <>
+                We&apos;ve sent a 6-digit verification code to your email (
+                {email}). Enter it below to complete your registration.
+              </>
+            )}
+            {type === "forgot-password" && (
+              <>
+                We&apos;ve sent a 6-digit verification code to your email (
+                {email}). Enter it below to reset your password.
+              </>
+            )}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -138,4 +162,12 @@ const OtpVerification = () => {
   );
 };
 
-export default OtpVerification;
+const SuspenseWrapper = () => {
+  return (
+    <Suspense>
+      <OtpVerification />
+    </Suspense>
+  );
+};
+
+export default SuspenseWrapper;
