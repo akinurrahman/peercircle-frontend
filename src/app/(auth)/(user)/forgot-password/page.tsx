@@ -17,14 +17,15 @@ import {
   ForgotPasswordFormData,
   forgotPasswordSchema,
 } from "@/validations/auth.schema";
-import { handleForgotPassword } from "@/actions/auth/forgot-password";
 import { useRouter } from "next/navigation";
 import { ButtonLoader } from "@/components/common/loader/loader";
-import { setEmail } from "@/store/slices/auth.slice";
 import { useDispatch } from "react-redux";
+import { forgotPassword } from "@/store/slices/auth/forgot-password.slice";
+import { AppDispatch } from "@/store";
+import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const form = useForm<ForgotPasswordFormData>({
     mode: "onTouched",
@@ -39,14 +40,16 @@ const ForgotPassword = () => {
   } = form;
 
   const onSubmit: SubmitHandler<ForgotPasswordFormData> = async (data) => {
-    const response = await handleForgotPassword(data);
-    if (response.success) {
-      dispatch(setEmail(data.email));
-      router.replace("/otp-verification?type=forgot-password");
-    } else {
+    try {
+      const response = await dispatch(forgotPassword(data)).unwrap();
+      toast.success(response.message || "Check your Mail");
+      router.push("/otp-verification?type=forgot-password");
+    } catch (error) {
       setError("root", {
         type: "manual",
-        message: response.message,
+        message:
+          (error as { message?: string })?.message ||
+          "Failed to send forgot password request.",
       });
     }
   };

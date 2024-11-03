@@ -6,11 +6,10 @@ import { Form } from "@/components/ui/form";
 import FormFieldWrapper from "@/components/common/FormFieldWrapper";
 import { Button } from "@/components/ui/button";
 import { ButtonLoader } from "@/components/common/loader/loader";
-import { handleSignUp } from "@/actions/auth/signup";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { setEmail } from "@/store/slices/auth.slice";
+import { signUp } from "@/store/slices/auth/signup.slice";
 import { AppDispatch } from "@/store";
 
 interface SignUpField {
@@ -71,22 +70,22 @@ const SignUpForm = () => {
   } = form;
 
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
-    const res = await handleSignUp(data);
-    if (res.success) {
-      dispatch(setEmail(data.email));
-      toast.success(res.data.message || `OTP has been sent to ${data?.email}`);
+    const response = await dispatch(signUp(data));
+    if (signUp.fulfilled.match(response)) {
+      toast.success(`OTP has been sent to ${data.email}`);
       router.push(`/otp-verification?type=signup`);
     } else {
+      const errorMessage = response.error.message || "Signup failed";
       setError("root", {
         type: "manual",
-        message: res.message,
+        message: errorMessage,
       });
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-2">
           {signUpFields?.map((field, index) => (
             <div key={index}>
@@ -97,7 +96,7 @@ const SignUpForm = () => {
         <Button
           variant="primary"
           type="submit"
-          className="w-full"
+          className="mt-6 w-full"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

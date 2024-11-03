@@ -1,4 +1,10 @@
-export const authenticationRoute = ["/login", "/signup", "/otp-verification"];
+export const authenticationRoute = [
+  "/login",
+  "/signup",
+  "/otp-verification",
+  "/reset-password",
+  "/forgot-password",
+];
 
 // Protected routes for different roles
 export const protectedRoutes = {
@@ -9,6 +15,7 @@ export const protectedRoutes = {
 // Default redirect paths
 export const defaultProtectedRoute = "/profile";
 export const defaultAuthenticationPath = "/login";
+export const defaultFeedPath = "/feed";
 
 // Function to generate matcher array
 export const generateMatchers = () => {

@@ -24,19 +24,25 @@ import { ButtonLoader } from "@/components/common/loader/loader";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { setToken } from "@/utils/token";
-import { setResetToken } from "@/store/slices/auth.slice";
-import { handleOTPverification } from "@/actions/auth/signup";
-import { handleForgotPasswordOTPverification } from "@/actions/auth/forgot-password";
+import { verifyOtp } from "@/store/slices/auth/signup.slice";
+import { verifyForgotPasswordOTP } from "@/store/slices/auth/forgot-password.slice";
+import { defaultFeedPath } from "@/constants/config.constant";
 
 const OtpVerification = () => {
+  const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const email = useSelector((state: RootState) => state.auth.email);
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+
+  const email = useSelector((state: RootState) => state.auth.common.email);
+  const { loading, error } = useSelector(
+    (state: RootState) => state.auth.signup
+  );
+  const { loading: forgotLoading, error: forgotError } = useSelector(
+    (state: RootState) => state.auth.forgot
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,23 +53,24 @@ const OtpVerification = () => {
       return;
     }
 
-    setIsSubmitting(true);
-    const response =
-      type === "signup"
-        ? await handleOTPverification(email, otp)
-        : await handleForgotPasswordOTPverification(email, otp);
+    try {
+      let response;
+      if (type === "signup") {
+        response = await dispatch(verifyOtp({ email, otp })).unwrap();
+        setToken(TOKEN_NAME, response.token);
+      } else if (type === "forgot-password") {
+        response = await dispatch(
+          verifyForgotPasswordOTP({ user_email: email, otp })
+        ).unwrap();
+      }
 
-    setIsSubmitting(false);
+      toast.success(response.message);
 
-    if (response.success) {
-      toast.success(response.data.message);
-      if (type === "signup") setToken(response.data.token);
-      if (type === "forgot-password")
-        dispatch(setResetToken(response.data.reset_token));
-      router.replace(type === "signup" ? "/feed" : "/reset-password");
-    } else {
-      setError(response.message);
-      toast.error(`Error: ${response.message}`);
+      router.replace(type === "signup" ? defaultFeedPath : "/reset-password");
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message || "Error verifying OTP";
+      toast.error(`Error: ${errorMessage}`);
     }
   };
 
@@ -95,8 +102,9 @@ const OtpVerification = () => {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {error && <p className="text-center text-red-500">{error}</p>}{" "}
-            {/* Error message display */}
+            {(error || forgotError) && (
+              <p className="text-center text-red-500">{error || forgotError}</p>
+            )}
             <div className="flex justify-center">
               <InputOTP
                 maxLength={6}
@@ -105,30 +113,15 @@ const OtpVerification = () => {
                 onChange={setOtp}
               >
                 <InputOTPGroup>
-                  <InputOTPSlot
-                    index={0}
-                    className={`h-12 w-14 ${error ? "border-red-500" : "border-gray-400"} `}
-                  />
-                  <InputOTPSlot
-                    index={1}
-                    className={`h-12 w-14 ${error ? "border-red-500" : "border-gray-400"} `}
-                  />
-                  <InputOTPSlot
-                    index={2}
-                    className={`h-12 w-14 ${error ? "border-red-500" : "border-gray-400"} `}
-                  />
-                  <InputOTPSlot
-                    index={3}
-                    className={`h-12 w-14 ${error ? "border-red-500" : "border-gray-400"} `}
-                  />
-                  <InputOTPSlot
-                    index={4}
-                    className={`h-12 w-14 ${error ? "border-red-500" : "border-gray-400"} `}
-                  />
-                  <InputOTPSlot
-                    index={5}
-                    className={`h-12 w-14 ${error ? "border-red-500" : "border-gray-400"} `}
-                  />
+                  {Array.from({ length: 6 }, (_, index) => (
+                    <InputOTPSlot
+                      key={index}
+                      index={index}
+                      className={`h-12 w-14 ${
+                        error ? "border-red-500" : "border-gray-400"
+                      }`}
+                    />
+                  ))}
                 </InputOTPGroup>
               </InputOTP>
             </div>
@@ -147,9 +140,9 @@ const OtpVerification = () => {
               type="submit"
               variant="primary"
               className="w-full"
-              disabled={otp.length !== 6 || isSubmitting}
+              disabled={otp.length !== 6 || loading || forgotLoading}
             >
-              {isSubmitting ? (
+              {loading || forgotLoading ? (
                 <ButtonLoader loadingText="Verifying OTP..." />
               ) : (
                 <>

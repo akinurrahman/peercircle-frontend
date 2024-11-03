@@ -6,12 +6,14 @@ import { ButtonLoader } from "@/components/common/loader/loader";
 import { loginSchema, LoginSchemaType } from "@/validations/auth.schema";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { handleLogin } from "@/actions/auth/login";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { setToken } from "@/utils/token";
+import { loginApi } from "@/services/apis/auth";
+import { defaultFeedPath } from "@/constants/config.constant";
 
 const LogInForm = () => {
+  const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
   const router = useRouter();
   const form = useForm<LoginSchemaType>({
     mode: "onTouched",
@@ -28,15 +30,15 @@ const LogInForm = () => {
   } = form;
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
-    const response = await handleLogin(data);
-    if (response.success) {
-      toast.success(response.data.message);
-      setToken(response.data.token);
-      router.push("/feed");
-    } else {
+    try {
+      const response = await loginApi(data);
+      toast.success(response.message);
+      setToken(TOKEN_NAME, response.token);
+      router.push(defaultFeedPath);
+    } catch (error) {
       setError("root", {
         type: "manual",
-        message: response.message,
+        message: (error as { message?: string })?.message || "Fail to login",
       });
     }
   };

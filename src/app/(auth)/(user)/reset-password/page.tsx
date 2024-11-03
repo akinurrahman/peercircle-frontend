@@ -15,16 +15,17 @@ import {
   resetPasswordSchema,
 } from "@/validations/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { handleResetPassword } from "@/actions/auth/forgot-password";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ButtonLoader } from "@/components/common/loader/loader";
+import { resetPassword } from "@/store/slices/auth/forgot-password.slice";
 
 const ResetPassword = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { reset_token } = useSelector((state: RootState) => state.auth);
+  const { reset_token } = useSelector((state: RootState) => state.auth.forgot);
   const form = useForm<ResetPasswordFormData>({
     mode: "onTouched",
     resolver: zodResolver(resetPasswordSchema),
@@ -39,14 +40,22 @@ const ResetPassword = () => {
     setError,
   } = form;
   const onSubmit: SubmitHandler<ResetPasswordFormData> = async (data) => {
-    const response = await handleResetPassword({ ...data, reset_token });
-    if (response.success) {
+    if (!reset_token) {
+      router.replace("/forgot-password");
+      return;
+    }
+
+    try {
+      await dispatch(resetPassword({ ...data, reset_token })).unwrap();
       router.replace("/login");
       toast.success("Password reset successfully! Login to Continue");
-    } else {
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message || "Failed to reset password.";
+      toast.error(errorMessage);
       setError("root", {
         type: "manual",
-        message: response.message,
+        message: errorMessage,
       });
     }
   };
