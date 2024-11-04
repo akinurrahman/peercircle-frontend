@@ -70,15 +70,14 @@ const SignUpForm = () => {
   } = form;
 
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
-    const response = await dispatch(signUp(data));
-    if (signUp.fulfilled.match(response)) {
-      toast.success(`OTP has been sent to ${data.email}`);
-      router.push(`/otp-verification?type=signup`);
-    } else {
-      const errorMessage = response.error.message || "Signup failed";
+    try {
+      const response = await dispatch(signUp(data)).unwrap();
+      toast.success(response.message);
+      router.push("/otp-verification?type=signup");
+    } catch (error) {
       setError("root", {
         type: "manual",
-        message: errorMessage,
+        message: error as string,
       });
     }
   };

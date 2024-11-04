@@ -11,3 +11,8 @@ export const isTokenExpired = (token: string | undefined | null): boolean => {
   const payload = JSON.parse(atob(token.split(".")[1])); // Decode token payload
   return payload.exp * 1000 < Date.now(); // Check expiration
 };
+
+// Function to remove the token
+export const removeToken = (name: string): void => {
+  Cookies.remove(name);
+};

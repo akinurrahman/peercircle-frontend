@@ -47,9 +47,7 @@ const ForgotPassword = () => {
     } catch (error) {
       setError("root", {
         type: "manual",
-        message:
-          (error as { message?: string })?.message ||
-          "Failed to send forgot password request.",
+        message: (error as string) || "Failed to send Forgot Password OTP",
       });
     }
   };

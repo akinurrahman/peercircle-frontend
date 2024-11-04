@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { SignUpSchemaType } from "@/validations/auth.schema";
 import http from "@/services/http";
 import { setEmail } from "./common.slice";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export interface AuthState {
   user: null | { email: string };
@@ -32,8 +33,8 @@ export const signUp = createAsyncThunk(
       dispatch(setEmail(data.email));
 
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to sign up.");
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -41,13 +42,14 @@ export const signUp = createAsyncThunk(
 // Async thunk for OTP verification
 export const verifyOtp = createAsyncThunk(
   "auth/verifyOtp",
-  async ({ email, otp }: { email: string; otp: string }) => {
-    const response = await http.post(`${baseUrl}/verify_otp`, {
-      user_email: email,
-      otp,
-    });
+  async (data: { user_email: string; otp: string }, { rejectWithValue }) => {
+    try {
+      const response = await http.post(`${baseUrl}/verify_otp`, data);
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
   }
 );
 
@@ -72,7 +74,7 @@ const signUpSlice = createSlice({
       })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "OTP verification failed";
+        state.error = (action.payload as string) || "OTP verification failed";
       });
   },
 });

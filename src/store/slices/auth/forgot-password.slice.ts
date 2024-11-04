@@ -3,7 +3,6 @@ import { ForgotPasswordFormData } from "@/validations/auth.schema";
 import http from "@/services/http";
 import { setEmail } from "./common.slice";
 import { getErrorMessage } from "@/utils/getErrorMessage";
-import { AxiosError } from "axios";
 
 // Define types for your state
 interface PasswordResetState {
@@ -37,8 +36,7 @@ export const forgotPassword = createAsyncThunk(
       dispatch(setEmail(data.email));
       return response.data;
     } catch (error) {
-      const errorMessage = getErrorMessage(error as AxiosError);
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -57,8 +55,7 @@ export const verifyForgotPasswordOTP = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      const errorMessage = getErrorMessage(error as AxiosError);
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -86,8 +83,7 @@ export const resetPassword = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      const errorMessage = getErrorMessage(error as AxiosError);
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );

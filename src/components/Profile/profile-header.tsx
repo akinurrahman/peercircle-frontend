@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   AtSign,
   UserPlus,
@@ -12,27 +16,31 @@ import {
   Calendar,
   Link as LinkIcon,
   ExternalLink,
+  Edit,
+  Share2,
+  MoreHorizontal,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
-export default function ProfileHeader({
-  isFollowing = false,
-  toggleFollow = () => {},
-  isPersonalView = false,
-}) {
-  const [activeTab, setActiveTab] = useState("posts");
+export default function ProfileHeader({ isPersonalView = false }) {
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const toggleFollow = () => {
+    setIsFollowing(!isFollowing);
+  };
 
   const userInfo = {
-    name: "Jane Doe",
-    username: "janedoe",
+    name: "Akinur Rahman",
+    username: "akinurrahman",
     avatar: "/placeholder.svg?height=128&width=128",
-    bio: "Frontend developer passionate about creating beautiful and accessible web experiences.",
-    location: "San Francisco, CA",
-    website: "https://janedoe.com",
+    bio: "Building cool stuff with code | Frontend dev | Making the web look amazing 🌟",
+    location: "Dhubri,Assam",
+    website: "https://akinurrahman.com",
     joinDate: "September 2021",
-    posts: 142,
-    followers: 1337,
-    following: 420,
+    followers: 1234,
+    following: 567,
   };
 
   return (
@@ -49,9 +57,11 @@ export default function ProfileHeader({
             </AvatarFallback>
           </Avatar>
           <div className="flex-grow text-center sm:text-left">
-            <h1 className="mb-2 text-2xl font-bold sm:text-3xl">
-              {userInfo.name}
-            </h1>
+            <div className="mb-2 flex items-center justify-center gap-2 sm:justify-start">
+              <h1 className="text-2xl font-bold sm:text-3xl">
+                {userInfo.name}
+              </h1>
+            </div>
             <div className="mb-2 flex items-center justify-center text-muted-foreground sm:justify-start">
               <AtSign className="mr-1 h-4 w-4" />
               <span className="text-sm sm:text-base">{userInfo.username}</span>
@@ -59,6 +69,20 @@ export default function ProfileHeader({
             <p className="mb-4 max-w-md text-sm text-muted-foreground">
               {userInfo.bio}
             </p>
+            <div className="mb-4 flex justify-center gap-6 text-sm sm:justify-start">
+              <div className="flex items-center">
+                <Users className="mr-1 h-4 w-4" />
+                <span>
+                  <strong>{userInfo.followers}</strong> followers
+                </span>
+              </div>
+              <div className="flex items-center">
+                <Users className="mr-1 h-4 w-4" />
+                <span>
+                  <strong>{userInfo.following}</strong> following
+                </span>
+              </div>
+            </div>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground sm:justify-start">
               {userInfo.location && (
                 <div className="flex items-center">
@@ -86,8 +110,13 @@ export default function ProfileHeader({
               )}
             </div>
           </div>
-          <div className="mt-4 flex gap-4 sm:mt-0">
-            {!isPersonalView && (
+          <div className="mt-4 flex items-center gap-4 sm:mt-0">
+            {isPersonalView ? (
+              <Button variant="outline" size="sm" className="rounded-full">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Profile
+              </Button>
+            ) : (
               <>
                 <Button
                   onClick={toggleFollow}
@@ -104,6 +133,19 @@ export default function ProfileHeader({
                 </Button>
               </>
             )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share Profile
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

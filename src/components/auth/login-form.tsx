@@ -9,10 +9,14 @@ import { Form } from "@/components/ui/form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { setToken } from "@/utils/token";
-import { loginApi } from "@/services/apis/auth";
+
 import { defaultFeedPath } from "@/constants/config.constant";
+import { useDispatch } from "react-redux";
+import { loginApi, resetError } from "@/store/slices/auth/login.slice";
+import { AppDispatch } from "@/store";
 
 const LogInForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
   const router = useRouter();
   const form = useForm<LoginSchemaType>({
@@ -30,15 +34,17 @@ const LogInForm = () => {
   } = form;
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
+    dispatch(resetError());
+
     try {
-      const response = await loginApi(data);
+      const response = await dispatch(loginApi(data)).unwrap();
       toast.success(response.message);
       setToken(TOKEN_NAME, response.token);
       router.push(defaultFeedPath);
-    } catch (error) {
+    } catch (err) {
       setError("root", {
         type: "manual",
-        message: (error as { message?: string })?.message || "Fail to login",
+        message: (err as string) || "Fail to login",
       });
     }
   };

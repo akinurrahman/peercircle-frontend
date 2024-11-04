@@ -1,40 +1,36 @@
-import { getErrorMessage } from "@/utils/getErrorMessage";
-import { isTokenExpired } from "@/utils/token";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import Cookies from "js-cookie";
 
-const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-// Create an Axios instance
-const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 10000, // Set a timeout for requests
+const http: AxiosInstance = axios.create({
+  baseURL: apiBaseUrl,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
-// Add request interceptor to include the token in the headers
+// Request interceptor to attach the token from cookies
 http.interceptors.request.use(
   (config) => {
-    const token = Cookies.get(TOKEN_NAME);
-    if (token && !isTokenExpired(token)) {
-      config.headers["Authorization"] = `Bearer ${token}`; // Add the token to the Authorization header
+    const token = Cookies.get("token"); // Get the token from cookies
+    if (token && config.headers) {
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error) // Handle any request errors
+  (error: AxiosError) => Promise.reject(error)
 );
 
-// Add response interceptor to handle errors
+// Response interceptor to handle errors
 http.interceptors.response.use(
-  (response) => response, // Return the response if no error
-  (error) => {
-    // Handle the error with proper typing
-    let errorMessage = "An unexpected error occurred."; // Default error message
-    if (error instanceof AxiosError) {
-      errorMessage = getErrorMessage(error); // Get a user-friendly error message
-    }
-
-    // Reject the promise with the error message and the original error
-    return Promise.reject({ message: errorMessage, originalError: error });
+  (response: AxiosResponse) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    return Promise.reject(error);
   }
 );
 

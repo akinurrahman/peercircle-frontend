@@ -37,6 +37,7 @@ const OtpVerification = () => {
   const type = searchParams.get("type");
 
   const email = useSelector((state: RootState) => state.auth.common.email);
+
   const { loading, error } = useSelector(
     (state: RootState) => state.auth.signup
   );
@@ -56,7 +57,9 @@ const OtpVerification = () => {
     try {
       let response;
       if (type === "signup") {
-        response = await dispatch(verifyOtp({ email, otp })).unwrap();
+        response = await dispatch(
+          verifyOtp({ user_email: email, otp })
+        ).unwrap();
         setToken(TOKEN_NAME, response.token);
       } else if (type === "forgot-password") {
         response = await dispatch(
@@ -69,7 +72,7 @@ const OtpVerification = () => {
       router.replace(type === "signup" ? defaultFeedPath : "/reset-password");
     } catch (error) {
       const errorMessage =
-        (error as { message?: string })?.message || "Error verifying OTP";
+        (error as { message?: string }) || "Error verifying OTP";
       toast.error(`Error: ${errorMessage}`);
     }
   };
