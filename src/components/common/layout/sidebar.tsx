@@ -1,91 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { SidebarItem, sidebarItems } from "@/constants/sidebardata.constant";
+
+import { sidebarItems } from "@/constants/sidebardata.constant";
 import { ModeToggle } from "./mode-toggler";
 import { useTheme } from "next-themes";
 import { imageConstant } from "@/constants/images.constant";
 import Image from "next/image";
-
-const SidebarButton = ({
-  item,
-  isActive,
-  level = 0,
-}: {
-  item: SidebarItem;
-  isActive: boolean;
-  level?: number;
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { icon: Icon, label, href, subitems } = item;
-  const hasSubitems = subitems && subitems.length > 0;
-
-  const buttonClasses = `
-    justify-start w-full flex items-center py-6 px-4 my-1 rounded-lg transition-all duration-200 ease-in-out
-    ${isActive ? "bg-primary/10 text-primary font-medium" : "hover:bg-primary/5 hover:text-primary"}
-    ${level > 0 ? "ml-4" : ""}
-  `;
-
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div>
-            {hasSubitems ? (
-              <Button
-                variant="ghost"
-                className={buttonClasses}
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                <Icon className="mr-3 size-5" />
-                <span className="grow text-left text-sm">{label}</span>
-                {isOpen ? (
-                  <ChevronDown className="size-4 transition-transform duration-200" />
-                ) : (
-                  <ChevronRight className="size-4 transition-transform duration-200" />
-                )}
-              </Button>
-            ) : (
-              <Link href={href} passHref>
-                <Button variant="ghost" className={buttonClasses}>
-                  <Icon className="mr-3 size-5" />
-                  <span className="grow text-left text-sm">{label}</span>
-                </Button>
-              </Link>
-            )}
-            {isOpen && hasSubitems && (
-              <div className="ml-4 mt-1 space-y-1">
-                {subitems.map((subitem, index) => (
-                  <SidebarButton
-                    key={index}
-                    item={subitem}
-                    isActive={false}
-                    level={level + 1}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </TooltipTrigger>
-        <TooltipContent side="right">
-          <p>{label}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { fetchBasicProfileInfo } from "@/store/slices/profile/profile.slice";
+import SidebarButton from "./sidebar-button";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -97,6 +25,13 @@ export default function Sidebar() {
   useEffect(() => {
     setLogoSrc(isDark ? imageConstant.darkModeLogo : imageConstant.logo);
   }, [isDark]);
+
+  const { profile } = useSelector((state: RootState) => state.profile.profile);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchBasicProfileInfo());
+  }, [dispatch]);
   return (
     <div className="flex h-full flex-col border-r bg-background text-foreground">
       <div className="flex items-center justify-center p-6">
@@ -122,13 +57,23 @@ export default function Sidebar() {
       <div className="mt-auto p-4">
         <div className="flex items-center space-x-3 rounded-lg bg-muted/50 p-3 transition-all duration-200 ease-in-out hover:bg-muted/70">
           <Avatar className="size-10 transition-transform duration-200 ease-in-out hover:scale-110">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage
+              src={profile?.profile_picture}
+              alt={profile?.full_name}
+            />
+            <AvatarFallback>
+              {profile?.full_name
+                ? profile.full_name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                : "?"}
+            </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">John Doe</p>
+            <p className="truncate text-sm font-medium">{profile?.full_name}</p>
             <p className="truncate text-xs text-muted-foreground">
-              john@example.com
+              {profile?.username}
             </p>
           </div>
           <ModeToggle />

@@ -35,19 +35,19 @@ export default function LayoutWrapper({
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-background p-2 md:hidden">
         <div className="flex justify-around">
           <Button variant="ghost" size="icon">
-            <Home className="h-6 w-6" />
+            <Home className="size-6" />
             <span className="sr-only">Home</span>
           </Button>
           <Button variant="ghost" size="icon">
-            <Search className="h-6 w-6" />
+            <Search className="size-6" />
             <span className="sr-only">Search</span>
           </Button>
           <Button variant="ghost" size="icon">
-            <MessageCircle className="h-6 w-6" />
+            <MessageCircle className="size-6" />
             <span className="sr-only">Messages</span>
           </Button>
           <Button variant="ghost" size="icon">
-            <Menu className="h-6 w-6" />
+            <Menu className="size-6" />
             <span className="sr-only">Menu</span>
           </Button>
         </div>

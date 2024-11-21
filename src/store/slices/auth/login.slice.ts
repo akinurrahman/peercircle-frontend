@@ -3,7 +3,6 @@ import { getErrorMessage } from "@/utils/getErrorMessage";
 import { LoginSchemaType } from "@/validations/auth.schema";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 // Define the initial state
 const initialState = {
   user: null,

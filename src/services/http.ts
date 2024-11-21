@@ -17,7 +17,8 @@ http.interceptors.request.use(
   (config) => {
     const token = Cookies.get("token"); // Get the token from cookies
     if (token && config.headers) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      // config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["Secret-Key"] = token;
     }
     return config;
   },

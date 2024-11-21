@@ -14,7 +14,7 @@ import {
 export interface SidebarItem {
   icon: React.ElementType;
   label: string;
-  href: string;
+  href?: string;
   subitems?: SidebarItem[];
 }
 
@@ -41,7 +41,7 @@ export const sidebarItems: SidebarItem[] = [
     subitems: [
       { icon: User, label: "Account", href: "/settings/account" },
       { icon: Shield, label: "Privacy", href: "/settings/privacy" },
-      { icon: LogOut, label: "Logout", href: "/logout" },
+      { icon: LogOut, label: "Logout" },
     ],
   },
 ];

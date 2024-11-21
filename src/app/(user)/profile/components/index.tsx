@@ -1,9 +1,13 @@
 import React from "react";
 import ProfileHeader from "./profile-header";
 
-const Profile = ({ isPersonalView }: any) => {
+interface ProfileProps {
+  isPersonalView: boolean;
+}
+
+const Profile: React.FC<ProfileProps> = ({ isPersonalView }) => {
   return (
-    <div className="">
+    <div>
       <ProfileHeader isPersonalView={isPersonalView} />
     </div>
   );

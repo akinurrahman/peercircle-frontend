@@ -21,6 +21,20 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Profile/about-section.jsx", "src/components/Profile/achivement-popup.jsx", "src/components/Profile/stats-section.jsx", "src/components/Profile/user-profile.jsx", "src/components/Profile/profile-header.tsx", "src/components/Profile/posts-section.jsx", "src/components/Profile/items-for-sale-section.jsx", "src/components/Profile/index.tsx", "src/store/slices/auth/login.slice.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/(user)/profile/components/about-section.jsx",
+    "src/app/(user)/profile/components/achivement-popup.jsx",
+    "src/app/(user)/profile/components/stats-section.jsx",
+    "src/app/(user)/profile/components/user-profile.jsx",
+    "src/app/(user)/profile/components/profile-header.tsx",
+    "src/app/(user)/profile/components/posts-section.jsx",
+    "src/app/(user)/profile/components/items-for-sale-section.jsx",
+    "src/app/(user)/profile/components/index.tsx",
+    "src/store/slices/auth/login.slice.ts"
+, "src/store/slices/profile/profile.slice.ts"  ],
   "exclude": ["node_modules"]
 }

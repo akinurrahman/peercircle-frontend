@@ -1,5 +1,6 @@
+"use client";
 import LayoutWrapper from "@/components/layout/user-feed-layout";
-import Profile from "@/components/Profile";
+import Profile from "@/app/(user)/profile/components";
 import React from "react";
 
 const page = () => {
