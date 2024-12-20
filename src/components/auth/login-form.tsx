@@ -8,21 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { setToken } from "@/utils/token";
 
 import { defaultFeedPath } from "@/constants/config.constant";
-import { useDispatch } from "react-redux";
-import { loginApi, resetError } from "@/store/slices/auth/login.slice";
-import { AppDispatch } from "@/store";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { authApis } from "@/services/apis/auth/auth.api";
 
 const LogInForm = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
   const router = useRouter();
   const form = useForm<LoginSchemaType>({
     mode: "onTouched",
     defaultValues: {
-      identifier: "",
+      email: "",
       password: "",
     },
     resolver: zodResolver(loginSchema),
@@ -34,17 +30,14 @@ const LogInForm = () => {
   } = form;
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
-    dispatch(resetError());
-
     try {
-      const response = await dispatch(loginApi(data)).unwrap();
+      const response = await authApis.login.create(data);
       toast.success(response.message);
-      setToken(TOKEN_NAME, response.token);
       router.push(defaultFeedPath);
     } catch (err) {
       setError("root", {
         type: "manual",
-        message: (err as string) || "Fail to login",
+        message: getErrorMessage(err),
       });
     }
   };
@@ -52,9 +45,9 @@ const LogInForm = () => {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <FormFieldWrapper
-          label="Username or Email"
-          name="identifier"
-          placeholder="Enter your email or username"
+          label="Email"
+          name="email"
+          placeholder="Enter your email"
           required
         />
         <FormFieldWrapper

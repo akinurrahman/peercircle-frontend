@@ -16,15 +16,15 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get(TOKEN_NAME)?.value;
 
   // 1. If user is authenticated (has a token) and tries to access an authentication route
-  if (token && authenticationRoute.includes(pathname)) {
-    return NextResponse.redirect(new URL(defaultProtectedRoute, req.url));
-  }
+  // if (token && authenticationRoute.includes(pathname)) {
+  //   return NextResponse.redirect(new URL(defaultProtectedRoute, req.url));
+  // }
 
   // 2. Redirect unauthenticated users accessing protected routes to the default authentication route
-  const userRoutes = protectedRoutes.user;
-  if (!token && userRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL(defaultAuthenticationPath, req.url));
-  }
+  // const userRoutes = protectedRoutes.user;
+  // if (!token && userRoutes.includes(pathname)) {
+  //   return NextResponse.redirect(new URL(defaultAuthenticationPath, req.url));
+  // }
 
   // 3. Allow the request to proceed for other routes
   return NextResponse.next();

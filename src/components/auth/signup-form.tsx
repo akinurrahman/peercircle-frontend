@@ -8,9 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ButtonLoader } from "@/components/common/loader/loader";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { signUp } from "@/store/slices/auth/signup.slice";
-import { AppDispatch } from "@/store";
+import { authApis } from "@/services/apis/auth/auth.api";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 interface SignUpField {
   label: string;
@@ -51,7 +50,6 @@ const signUpFields: SignUpField[] = [
 ];
 
 const SignUpForm = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const form = useForm<SignUpSchemaType>({
     mode: "onTouched",
@@ -71,13 +69,14 @@ const SignUpForm = () => {
 
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
     try {
-      const response = await dispatch(signUp(data)).unwrap();
+      const response = await authApis.register.create(data);
       toast.success(response.message);
-      router.push("/otp-verification?type=signup");
+      router.push("/otp-verification");
     } catch (error) {
+      console.log(error, 'error')
       setError("root", {
         type: "manual",
-        message: error as string,
+        message: getErrorMessage(error),
       });
     }
   };

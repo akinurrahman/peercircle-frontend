@@ -3,20 +3,10 @@ import {
   emailSchema,
   fullNameSchema,
   passwordSchema,
-  usernameSchema,
 } from "./common.schema";
 
 export const loginSchema = z.object({
-  identifier: z
-    .string()
-    .refine(
-      (val) =>
-        emailSchema.safeParse(val).success ||
-        usernameSchema.safeParse(val).success,
-      {
-        message: "Invalid username or email",
-      }
-    ),
+  email : emailSchema,
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
