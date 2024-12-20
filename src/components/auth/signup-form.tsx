@@ -74,9 +74,9 @@ const SignUpForm = () => {
       toast.success(response.message);
       router.push("/otp-verification");
       Cookies.set("isVerified", "false");
-      Cookies.set("email", data.email)
+      Cookies.set("email", data.email);
     } catch (error) {
-      console.log(error, 'error')
+      console.log(error, "error");
       setError("root", {
         type: "manual",
         message: getErrorMessage(error),

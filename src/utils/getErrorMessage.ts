@@ -9,8 +9,7 @@ export const getErrorMessage = (error: unknown): string => {
   return ERROR_MESSAGE; // Default error message if the error is not structured as expected
 };
 
-
 // Type guard to check if error is ApiError
 function isApiError(error: unknown): error is ApiError {
-  return typeof error === 'object' && error !== null && 'response' in error;
+  return typeof error === "object" && error !== null && "response" in error;
 }

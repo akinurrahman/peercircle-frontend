@@ -1,12 +1,8 @@
 import { z } from "zod";
-import {
-  emailSchema,
-  fullNameSchema,
-  passwordSchema,
-} from "./common.schema";
+import { emailSchema, fullNameSchema, passwordSchema } from "./common.schema";
 
 export const loginSchema = z.object({
-  email : emailSchema,
+  email: emailSchema,
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),

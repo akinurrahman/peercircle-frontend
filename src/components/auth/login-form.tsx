@@ -9,9 +9,14 @@ import { Form } from "@/components/ui/form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-import { defaultFeedPath } from "@/constants/config.constant";
+import {
+  accessTokenCookie,
+  defaultFeedPath,
+  refreshTokenCookie,
+} from "@/constants/config.constant";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { authApis } from "@/services/apis/auth/auth.api";
+import Cookies from "js-cookie";
 
 const LogInForm = () => {
   const router = useRouter();
@@ -33,6 +38,8 @@ const LogInForm = () => {
     try {
       const response = await authApis.login.create(data);
       toast.success(response.message);
+      Cookies.set(accessTokenCookie, response.accessToken);
+      Cookies.set(refreshTokenCookie, response.refreshToken);
       router.push(defaultFeedPath);
     } catch (err) {
       setError("root", {

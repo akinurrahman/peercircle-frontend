@@ -24,6 +24,5 @@ export const generateMatchers = () => {
   return uniqueRoutes.map((route) => `${route}/:path*`);
 };
 
-
-export const accessTokenCookie= "accessToken"
+export const accessTokenCookie = "accessToken";
 export const refreshTokenCookie = "refreshToken";

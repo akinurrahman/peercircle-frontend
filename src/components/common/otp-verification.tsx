@@ -125,7 +125,6 @@ const OtpVarification = () => {
               className="w-full"
               disabled={otp.length !== 6 || isSubmitting}
             >
-              
               {isSubmitting ? (
                 <ButtonLoader loadingText="Verifying" />
               ) : (
