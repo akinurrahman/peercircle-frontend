@@ -41,6 +41,7 @@ const OtpVarification = () => {
     setIsSumbitting(true);
     try {
       await authApis.verifyOtp.create({ email, otp });
+      Cookies.set("isVerified", "true");
       if (hasToken) {
         router.push(defaultFeedPath);
       } else {

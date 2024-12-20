@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { authApis } from "@/services/apis/auth/auth.api";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import Cookies from "js-cookie";
 
 interface SignUpField {
   label: string;
@@ -72,6 +73,8 @@ const SignUpForm = () => {
       const response = await authApis.register.create(data);
       toast.success(response.message);
       router.push("/otp-verification");
+      Cookies.set("isVerified", "false");
+      Cookies.set("email", data.email)
     } catch (error) {
       console.log(error, 'error')
       setError("root", {
