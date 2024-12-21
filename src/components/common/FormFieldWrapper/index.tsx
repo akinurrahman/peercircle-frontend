@@ -1,66 +1,77 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import React from "react";
-import { Control, useFormContext } from "react-hook-form";
 
 interface FormFieldWrapperProps {
   name: string;
-  type?: string;
-  fieldType?: "input" | "textarea" | "select";
-  label?: string;
-  placeholder?: string;
-  required?: boolean;
+  fieldType?: "text" | "textarea" | "radio";
+  options?: { label: string; value: string }[];
+  onChange?: (value: string) => void; 
 }
 
-const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
+const FormFieldWrapper = ({
   name,
-  type = "text",
-  fieldType = "input",
-  label,
-  placeholder,
-  required,
-}) => {
+  fieldType = "text",
+  options,
+  onChange,
+}: FormFieldWrapperProps) => {
   const { control } = useFormContext();
 
-  const renderField = (field: any, fieldState: any) => {
-    switch (fieldType) {
-      case "input":
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+          field.onChange(e); 
+          onChange?.(e.target.value); 
+        };
+
+        if (fieldType === "radio" && options) {
+          return (
+            <RadioGroup
+              onValueChange={(value) => {
+                field.onChange(value);
+                onChange?.(value);
+              }}
+              defaultValue={field.value}
+              className="flex flex-row items-center space-x-3" 
+            >
+              {options.map((option) => (
+                <div
+                  key={option.value}
+                  className="flex items-center space-x-2" 
+                >
+                  <RadioGroupItem value={option.value} id={option.value} />
+                  <Label htmlFor={option.value} className="cursor-pointer">
+                    {option.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          );
+        }
+
+
+        if (fieldType === "textarea") {
+          return (
+            <textarea
+              {...field}
+              onChange={handleChange}
+              className="textarea-class" // Add appropriate styles
+            />
+          );
+        }
+
         return (
           <Input
-            placeholder={placeholder}
-            type={type}
             {...field}
-            className={cn(`${fieldState.invalid && "border-red-500"} py-5`)}
+            onChange={handleChange}
+            className="input-class" 
           />
         );
-      default:
-        return null;
-    }
-  };
-  return (
-    <FormField
-      control={control as Control}
-      name={name}
-      render={({ field, fieldState }) => (
-        <FormItem>
-          {label && (
-            <Label>
-              {label}
-              {required && <span className="text-red-500">*</span>}
-            </Label>
-          )}
-
-          <FormControl>{renderField(field, fieldState)}</FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      }}
     />
   );
 };

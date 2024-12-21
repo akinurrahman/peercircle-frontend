@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RootState } from "@/store";
 import {
   AtSign,
   UserPlus,
@@ -17,38 +16,34 @@ import {
   MapPin,
   Link as LinkIcon,
   ExternalLink,
-  Edit,
   Share2,
   MoreHorizontal,
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useFetchProfile } from "../hooks/useFetchProfile";
+import { EditProfileModal } from "./EditProfileModal";
 
 interface ProfileHeaderProps {
   isPersonalView?: boolean;
+  profileId?: string;
 }
 
+
 export default function ProfileHeader({
-  isPersonalView = false,
+  isPersonalView = true,
+  profileId,
 }: ProfileHeaderProps) {
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const { profile,fetchProfile,isLoading, toggleFollowUnfollow, isFollowing } = useFetchProfile(isPersonalView, profileId)
+ 
 
   const toggleFollow = () => {
-    setIsFollowing(!isFollowing);
-  };
-
-  const { profile, loading, error } = useSelector(
-    (state: RootState) => state.profile.profile
-  );
-
-  if (loading) {
-    return <ProfileHeaderSkeleton />;
+    if (!profileId) return;
+    toggleFollowUnfollow(profileId);
   }
 
-  if (error) {
-    return <div>Error loading profile: {error}</div>;
+  if (isLoading || !profile) {
+    return <ProfileHeaderSkeleton />
   }
 
   return (
@@ -57,22 +52,23 @@ export default function ProfileHeader({
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
           <Avatar className="size-24 border-4 border-background shadow-lg sm:size-32">
             <AvatarImage
-              src={profile?.profile_picture}
-              alt={profile?.full_name}
+              src={profile?.profilePicture}
+              alt={profile?.fullName}
+              className="object-cover"
             />
             <AvatarFallback>
-              {profile?.full_name
-                ? profile.full_name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
+              {profile?.fullName
+                ? profile.fullName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
                 : "?"}
             </AvatarFallback>
           </Avatar>
           <div className="grow text-center sm:text-left">
             <div className="mb-2 flex items-center justify-center gap-2 sm:justify-start">
               <h1 className="text-2xl font-bold sm:text-3xl">
-                {profile?.full_name}
+                {profile?.fullName}
               </h1>
             </div>
             <div className="mb-2 flex items-center justify-center text-muted-foreground sm:justify-start">
@@ -86,13 +82,13 @@ export default function ProfileHeader({
               <div className="flex items-center">
                 <Users className="mr-1 size-4" />
                 <span>
-                  <strong>{profile?.followers_count}</strong> followers
+                  <strong>{profile?.followers}</strong> followers
                 </span>
               </div>
               <div className="flex items-center">
                 <Users className="mr-1 size-4" />
                 <span>
-                  <strong>{profile?.following_count}</strong> following
+                  <strong>{profile?.following}</strong> following
                 </span>
               </div>
             </div>
@@ -118,11 +114,8 @@ export default function ProfileHeader({
             </div>
           </div>
           <div className="mt-4 flex items-center gap-4 sm:mt-0">
-            {isPersonalView ? (
-              <Button variant="outline" size="sm" className="rounded-full">
-                <Edit className="mr-2 size-4" />
-                Edit Profile
-              </Button>
+            {isPersonalView  ? (
+              <EditProfileModal profile={profile} fetchProfile={fetchProfile}  />
             ) : (
               <>
                 <Button
@@ -138,21 +131,22 @@ export default function ProfileHeader({
                   <Mail className="mr-2 size-4" />
                   Message
                 </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                        <MoreHorizontal className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Share2 className="mr-2 size-4" />
+                        Share Profile
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
               </>
             )}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Share2 className="mr-2 size-4" />
-                  Share Profile
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            
           </div>
         </div>
       </div>

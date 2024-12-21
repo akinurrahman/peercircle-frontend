@@ -26,12 +26,7 @@ export default function Sidebar() {
     setLogoSrc(isDark ? imageConstant.darkModeLogo : imageConstant.logo);
   }, [isDark]);
 
-  const { profile } = useSelector((state: RootState) => state.profile.profile);
-  const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(fetchBasicProfileInfo());
-  }, [dispatch]);
   return (
     <div className="flex h-full flex-col border-r bg-background text-foreground">
       <div className="flex items-center justify-center p-6">
@@ -56,7 +51,7 @@ export default function Sidebar() {
       </ScrollArea>
       <div className="mt-auto p-4">
         <div className="flex items-center space-x-3 rounded-lg bg-muted/50 p-3 transition-all duration-200 ease-in-out hover:bg-muted/70">
-          <Avatar className="size-10 transition-transform duration-200 ease-in-out hover:scale-110">
+          {/* <Avatar className="size-10 transition-transform duration-200 ease-in-out hover:scale-110">
             <AvatarImage
               src={profile?.profile_picture}
               alt={profile?.full_name}
@@ -69,11 +64,11 @@ export default function Sidebar() {
                     .join("")
                 : "?"}
             </AvatarFallback>
-          </Avatar>
+          </Avatar> */}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{profile?.full_name}</p>
+            {/* <p className="truncate text-sm font-medium">{profile?.full_name}</p> */}
             <p className="truncate text-xs text-muted-foreground">
-              {profile?.username}
+              {/* {profile?.username} */}
             </p>
           </div>
           <ModeToggle />

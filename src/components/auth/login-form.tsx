@@ -40,6 +40,7 @@ const LogInForm = () => {
       toast.success(response.message);
       Cookies.set(accessTokenCookie, response.accessToken);
       Cookies.set(refreshTokenCookie, response.refreshToken);
+      Cookies.set("id", response.user?.id);
       router.push(defaultFeedPath);
     } catch (err) {
       setError("root", {
