@@ -23,3 +23,6 @@ export const generateMatchers = () => {
   const uniqueRoutes = [...new Set(allRoutes)]; // Remove duplicates
   return uniqueRoutes.map((route) => `${route}/:path*`);
 };
+
+export const accessTokenCookie = "accessToken";
+export const refreshTokenCookie = "refreshToken";

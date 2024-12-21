@@ -6,23 +6,22 @@ import {
   defaultAuthenticationPath,
   defaultProtectedRoute,
   generateMatchers,
+  accessTokenCookie,
 } from "@/constants/config.constant";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || "token";
 
-  // Get the authentication token from cookies
-  const token = req.cookies.get(TOKEN_NAME)?.value;
+  const token = req.cookies.get(accessTokenCookie)?.value;
+  const isAuthenticated = token !== undefined && token !== null && token !== "";
 
   // 1. If user is authenticated (has a token) and tries to access an authentication route
-  if (token && authenticationRoute.includes(pathname)) {
+  if (isAuthenticated && authenticationRoute.includes(pathname)) {
     return NextResponse.redirect(new URL(defaultProtectedRoute, req.url));
   }
 
   // 2. Redirect unauthenticated users accessing protected routes to the default authentication route
-  const userRoutes = protectedRoutes.user;
-  if (!token && userRoutes.includes(pathname)) {
+  if (!isAuthenticated && protectedRoutes.user.includes(pathname)) {
     return NextResponse.redirect(new URL(defaultAuthenticationPath, req.url));
   }
 
