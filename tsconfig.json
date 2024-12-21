@@ -26,15 +26,16 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(user)/profile/components/about-section.jsx",
-    "src/app/(user)/profile/components/achivement-popup.jsx",
-    "src/app/(user)/profile/components/stats-section.jsx",
-    "src/app/(user)/profile/components/user-profile.jsx",
-    "src/app/(user)/profile/components/profile-header.tsx",
-    "src/app/(user)/profile/components/posts-section.jsx",
-    "src/app/(user)/profile/components/items-for-sale-section.jsx",
-    "src/app/(user)/profile/components/index.tsx",
-    "src/store/slices/auth/login.slice.ts"
-, "src/store/slices/profile/profile.slice.ts"  ],
+    "src/app/profile/components/about-section.jsx",
+    "src/app/profile/components/achivement-popup.jsx",
+    "src/app/profile/components/stats-section.jsx",
+    "src/app/profile/components/user-profile.jsx",
+    "src/app/profile/components/ProfileHeader.tsx",
+    "src/app/profile/components/posts-section.jsx",
+    "src/app/profile/components/items-for-sale-section.jsx",
+    "src/app/profile/components/index.tsx",
+    "src/store/slices/auth/login.slice.ts",
+    "src/store/slices/profile/profile.slice.ts"
+  ],
   "exclude": ["node_modules"]
 }
