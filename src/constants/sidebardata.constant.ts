@@ -29,7 +29,6 @@ export const sidebarItems: SidebarItem[] = [
     icon: User,
     label: "Profile",
     href: "/profile",
-    
   },
   {
     icon: Settings,

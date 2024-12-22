@@ -10,7 +10,7 @@ export default function ProfileContent({ profileId }: { profileId?: string }) {
   const [activeTab, setActiveTab] = useState("posts");
 
   return (
-    <div className="h-full flex-1  px-4 pb-20">
+    <div className="h-full flex-1 px-4 pb-20">
       <div className="mx-auto w-full max-w-4xl">
         <Tabs
           defaultValue="posts"

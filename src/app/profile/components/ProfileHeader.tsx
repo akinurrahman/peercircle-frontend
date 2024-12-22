@@ -63,9 +63,9 @@ export default function ProfileHeader({
             <AvatarFallback>
               {profile?.fullName
                 ? profile.fullName
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
                 : "?"}
             </AvatarFallback>
           </Avatar>

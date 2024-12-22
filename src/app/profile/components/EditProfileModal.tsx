@@ -69,7 +69,6 @@ export function EditProfileModal({
     }
   };
 
-
   const onSubmit = async (data: Profile) => {
     console.log("Submitted Data:", data);
     try {
