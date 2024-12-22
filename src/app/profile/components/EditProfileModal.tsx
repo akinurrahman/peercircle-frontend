@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ export function EditProfileModal({
   });
 
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = form;
 
   const checkUsernameAvailability = debounce(async (username: string) => {
@@ -69,7 +69,13 @@ export function EditProfileModal({
     }
   };
 
+
+  useEffect(() => {
+    console.log("Validation Errors:", errors); // Debug validation errors
+  }, [errors]);
+
   const onSubmit = async (data: Profile) => {
+    console.log("Submitted Data:", data);
     try {
       await profileApis.profile.updateOne("", {
         ...data,
