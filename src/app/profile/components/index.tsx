@@ -1,5 +1,6 @@
 import React from "react";
 import ProfileHeader from "./ProfileHeader";
+import ProfileContent from "./profile-body";
 
 interface ProfileProps {
   isPersonalView: boolean;
@@ -8,8 +9,9 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ isPersonalView, profileId }) => {
   return (
-    <div>
+    <div className="flex min-h-screen flex-col bg-background px-4">
       <ProfileHeader isPersonalView={isPersonalView} profileId={profileId} />
+      <ProfileContent profileId={profileId} />
     </div>
   );
 };
