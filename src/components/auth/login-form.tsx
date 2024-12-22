@@ -1,7 +1,6 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import FormFieldWrapper from "@/components/common/FormFieldWrapper";
 import { ButtonLoader } from "@/components/common/loader/loader";
 import { loginSchema, LoginSchemaType } from "@/validations/auth.schema";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,7 @@ import {
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { authApis } from "@/services/apis/auth/auth.api";
 import Cookies from "js-cookie";
+import { FormInput } from "../common/FormInput";
 
 const LogInForm = () => {
   const router = useRouter();
@@ -52,18 +52,18 @@ const LogInForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-        <FormFieldWrapper
+        <FormInput
+          fieldType="input"
           label="Email"
           name="email"
           placeholder="Enter your email"
-          required
         />
-        <FormFieldWrapper
+        <FormInput
+          fieldType="input"
           label="Password"
           name="password"
           placeholder="Enter your password"
           type="password"
-          required
         />
         <button
           type="button"

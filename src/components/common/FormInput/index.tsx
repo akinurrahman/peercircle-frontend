@@ -1,12 +1,25 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Switch } from '@/components/ui/switch';
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
 
 type BaseFieldProps = {
   name: string;
@@ -16,33 +29,33 @@ type BaseFieldProps = {
 };
 
 type InputFieldProps = BaseFieldProps & {
-  fieldType: 'input';
-  type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
+  fieldType: "input";
+  type?: React.InputHTMLAttributes<HTMLInputElement>["type"];
   placeholder?: string;
 };
 
 type TextareaFieldProps = BaseFieldProps & {
-  fieldType: 'textarea';
+  fieldType: "textarea";
   placeholder?: string;
 };
 
 type SelectFieldProps = BaseFieldProps & {
-  fieldType: 'select';
+  fieldType: "select";
   options: Array<{ label: string; value: string }>;
 };
 
 type CheckboxFieldProps = BaseFieldProps & {
-  fieldType: 'checkbox';
+  fieldType: "checkbox";
 };
 
 type RadioFieldProps = BaseFieldProps & {
-  fieldType: 'radio';
+  fieldType: "radio";
   options: Array<{ label: string; value: string }>;
-  radioLayout?: 'row' | 'column';
+  radioLayout?: "row" | "column";
 };
 
 type SwitchFieldProps = BaseFieldProps & {
-  fieldType: 'switch';
+  fieldType: "switch";
 };
 
 type FormInputProps =
@@ -58,7 +71,7 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
 
   const renderField = (field: any) => {
     switch (props.fieldType) {
-      case 'input':
+      case "input":
         return (
           <Input
             {...field}
@@ -70,7 +83,7 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
             }}
           />
         );
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
             {...field}
@@ -81,7 +94,7 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
             }}
           />
         );
-      case 'select':
+      case "select":
         return (
           <Select
             onValueChange={(value) => {
@@ -102,7 +115,7 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
             </SelectContent>
           </Select>
         );
-      case 'checkbox':
+      case "checkbox":
         return (
           <Checkbox
             checked={field.value}
@@ -112,7 +125,7 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
             }}
           />
         );
-      case 'radio':
+      case "radio":
         return (
           <RadioGroup
             onValueChange={(value) => {
@@ -120,17 +133,26 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
               if (props.onChange) props.onChange(value);
             }}
             defaultValue={field.value}
-            className={props.radioLayout === 'row' ? 'flex flex-row space-x-4' : 'flex flex-col space-y-2'}
+            className={
+              props.radioLayout === "row"
+                ? "flex flex-row space-x-4"
+                : "flex flex-col space-y-2"
+            }
           >
             {props.options.map((option) => (
               <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={`${props.name}-${option.value}`} />
-                <FormLabel htmlFor={`${props.name}-${option.value}`}>{option.label}</FormLabel>
+                <RadioGroupItem
+                  value={option.value}
+                  id={`${props.name}-${option.value}`}
+                />
+                <FormLabel htmlFor={`${props.name}-${option.value}`}>
+                  {option.label}
+                </FormLabel>
               </div>
             ))}
           </RadioGroup>
         );
-      case 'switch':
+      case "switch":
         return (
           <Switch
             checked={field.value}
@@ -152,14 +174,13 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
       render={({ field }) => (
         <FormItem>
           {props.label && <FormLabel>{props.label}</FormLabel>}
-          <FormControl>
-            {renderField(field)}
-          </FormControl>
-          {props.description && <FormDescription>{props.description}</FormDescription>}
+          <FormControl>{renderField(field)}</FormControl>
+          {props.description && (
+            <FormDescription>{props.description}</FormDescription>
+          )}
           <FormMessage />
         </FormItem>
       )}
     />
   );
 };
-

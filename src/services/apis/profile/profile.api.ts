@@ -5,4 +5,3 @@ export const profileApis = {
   followUnfollow: generateApis("/toggle-follow-unfollow"),
   checkUsernameAvailability: generateApis("/check-username"),
 };
-
