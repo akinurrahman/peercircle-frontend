@@ -7,7 +7,7 @@ export const profileSchema = z.object({
   gender: z.enum(["male", "female", "other"]).optional(),
   username: z.string().min(3, "Username must be at least 3 characters"),
   location: z.string().optional(),
-  website_url: z.string().url("Invalid URL for website").or(z.literal("")),
+  website_url: z.string().url("Invalid URL for website").or(z.literal("")).optional(),
 });
 
 export type Profile = z.infer<typeof profileSchema>;
