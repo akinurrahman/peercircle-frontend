@@ -70,10 +70,6 @@ export function EditProfileModal({
   };
 
 
-  useEffect(() => {
-    console.log("Validation Errors:", errors); // Debug validation errors
-  }, [errors]);
-
   const onSubmit = async (data: Profile) => {
     console.log("Submitted Data:", data);
     try {
