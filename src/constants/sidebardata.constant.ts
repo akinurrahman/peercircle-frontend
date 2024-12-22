@@ -29,10 +29,7 @@ export const sidebarItems: SidebarItem[] = [
     icon: User,
     label: "Profile",
     href: "/profile",
-    subitems: [
-      { icon: User, label: "View Profile", href: "/profile/view" },
-      { icon: Settings, label: "Edit Profile", href: "/profile/edit" },
-    ],
+    
   },
   {
     icon: Settings,
