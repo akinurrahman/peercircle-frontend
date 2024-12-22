@@ -5,7 +5,7 @@ import React from "react";
 const page = () => {
   return (
     <LayoutWrapper showRightSidebar={false}>
-      <Profile isPersonalView={true}  />
+      <Profile isPersonalView={true} />
     </LayoutWrapper>
   );
 };

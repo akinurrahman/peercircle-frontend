@@ -26,7 +26,6 @@ export default function Sidebar() {
     setLogoSrc(isDark ? imageConstant.darkModeLogo : imageConstant.logo);
   }, [isDark]);
 
-
   return (
     <div className="flex h-full flex-col border-r bg-background text-foreground">
       <div className="flex items-center justify-center p-6">

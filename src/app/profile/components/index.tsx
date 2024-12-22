@@ -3,7 +3,7 @@ import ProfileHeader from "./ProfileHeader";
 
 interface ProfileProps {
   isPersonalView: boolean;
-  profileId?: string
+  profileId?: string;
 }
 
 const Profile: React.FC<ProfileProps> = ({ isPersonalView, profileId }) => {

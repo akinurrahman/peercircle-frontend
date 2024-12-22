@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignUpSchemaType } from "@/validations/auth.schema";
 import { Form } from "@/components/ui/form";
-import FormFieldWrapper from "@/components/common/FormFieldWrapper";
 import { Button } from "@/components/ui/button";
 import { ButtonLoader } from "@/components/common/loader/loader";
 import { toast } from "react-toastify";
@@ -11,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { authApis } from "@/services/apis/auth/auth.api";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import Cookies from "js-cookie";
+import { FormInput } from "../common/FormInput";
 
 interface SignUpField {
   label: string;
@@ -18,6 +18,7 @@ interface SignUpField {
   placeholder?: string;
   required?: boolean;
   type?: string;
+  fieldType: "input";
 }
 
 const signUpFields: SignUpField[] = [
@@ -26,12 +27,14 @@ const signUpFields: SignUpField[] = [
     name: "fullName",
     placeholder: "Enter your full name",
     required: true,
+    fieldType: "input",
   },
   {
     label: "Email",
     name: "email",
     placeholder: "Enter your email",
     required: true,
+    fieldType: "input",
   },
 
   {
@@ -40,6 +43,7 @@ const signUpFields: SignUpField[] = [
     placeholder: "Enter your password",
     required: true,
     type: "password",
+    fieldType: "input",
   },
   {
     label: "Confirm Password",
@@ -47,6 +51,7 @@ const signUpFields: SignUpField[] = [
     placeholder: "Re-enter your password",
     required: true,
     type: "password",
+    fieldType: "input",
   },
 ];
 
@@ -90,7 +95,7 @@ const SignUpForm = () => {
         <div className="space-y-2">
           {signUpFields?.map((field, index) => (
             <div key={index}>
-              <FormFieldWrapper {...field} />
+              <FormInput {...field} />
             </div>
           ))}
         </div>

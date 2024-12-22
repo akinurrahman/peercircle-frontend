@@ -29,21 +29,25 @@ interface ProfileHeaderProps {
   profileId?: string;
 }
 
-
 export default function ProfileHeader({
   isPersonalView = true,
   profileId,
 }: ProfileHeaderProps) {
-  const { profile,fetchProfile,isLoading, toggleFollowUnfollow, isFollowing } = useFetchProfile(isPersonalView, profileId)
- 
+  const {
+    profile,
+    fetchProfile,
+    isLoading,
+    toggleFollowUnfollow,
+    isFollowing,
+  } = useFetchProfile(isPersonalView, profileId);
 
   const toggleFollow = () => {
     if (!profileId) return;
     toggleFollowUnfollow(profileId);
-  }
+  };
 
   if (isLoading || !profile) {
-    return <ProfileHeaderSkeleton />
+    return <ProfileHeaderSkeleton />;
   }
 
   return (
@@ -59,9 +63,9 @@ export default function ProfileHeader({
             <AvatarFallback>
               {profile?.fullName
                 ? profile.fullName
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
                 : "?"}
             </AvatarFallback>
           </Avatar>
@@ -114,8 +118,8 @@ export default function ProfileHeader({
             </div>
           </div>
           <div className="mt-4 flex items-center gap-4 sm:mt-0">
-            {isPersonalView  ? (
-              <EditProfileModal profile={profile} fetchProfile={fetchProfile}  />
+            {isPersonalView ? (
+              <EditProfileModal profile={profile} fetchProfile={fetchProfile} />
             ) : (
               <>
                 <Button
@@ -131,22 +135,25 @@ export default function ProfileHeader({
                   <Mail className="mr-2 size-4" />
                   Message
                 </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="rounded-full">
-                        <MoreHorizontal className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Share2 className="mr-2 size-4" />
-                        Share Profile
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full"
+                    >
+                      <MoreHorizontal className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Share2 className="mr-2 size-4" />
+                      Share Profile
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             )}
-            
           </div>
         </div>
       </div>
