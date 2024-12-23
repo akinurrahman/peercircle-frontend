@@ -19,7 +19,7 @@ import { Form } from "@/components/ui/form";
 import { profileSchema } from "@/validations/profile.schema";
 import { debounce } from "lodash";
 import { profileApis } from "@/services/apis/profile/profile.api";
-import { uploadFile } from "@/services/apis/file-upload/file.api";
+import { uploadToCloud } from "@/services/apis/file-upload/file.api";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { Profile } from "../hooks/useFetchProfile";
@@ -64,7 +64,7 @@ export function EditProfileModal({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const response = await uploadFile(file);
+      const response = await uploadToCloud(file);
       setProfilePicture(response);
     }
   };

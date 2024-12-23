@@ -70,7 +70,7 @@ export default function Sidebar() {
           <ModeToggle />
         </div>
       </div>
-      <Modal/>
+      <Modal />
     </div>
   );
 }

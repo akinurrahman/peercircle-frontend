@@ -20,6 +20,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
+import FileUploadField from "./file-upload-field";
 
 type BaseFieldProps = {
   name: string;
@@ -58,13 +59,20 @@ type SwitchFieldProps = BaseFieldProps & {
   fieldType: "switch";
 };
 
+type FileUploadFieldProps = BaseFieldProps & {
+  fieldType: "file";
+  accept?: string;
+  multiple?: boolean;
+};
+
 type FormInputProps =
   | InputFieldProps
   | TextareaFieldProps
   | SelectFieldProps
   | CheckboxFieldProps
   | RadioFieldProps
-  | SwitchFieldProps;
+  | SwitchFieldProps
+  | FileUploadFieldProps;
 
 export const FormInput: React.FC<FormInputProps> = (props) => {
   const { control } = useFormContext();
@@ -160,6 +168,15 @@ export const FormInput: React.FC<FormInputProps> = (props) => {
               field.onChange(checked);
               if (props.onChange) props.onChange(checked);
             }}
+          />
+        );
+      case "file":
+        return (
+          <FileUploadField
+            field={field}
+            accept={props.accept}
+            multiple={props.multiple}
+            onChange={props.onChange}
           />
         );
       default:
