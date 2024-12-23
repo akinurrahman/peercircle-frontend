@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface Post {
   id: string;
   caption?: string;
-  mediaUrl: string;
+  mediaUrls: string[];
   createdAt: string;
   updatedAt: string;
   comments: number;
@@ -25,9 +25,7 @@ export default function PostsGrid({ profileId }: { profileId?: string }) {
   const fetchPosts = async (profileId = "") => {
     setIsLoading(true);
     try {
-      const response = await profileApis.posts.getAll(
-        `?profileId=${profileId}`
-      );
+      const response = await profileApis.post.getAll(`?profileId=${profileId}`);
       setPosts(response);
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -61,8 +59,8 @@ const PostItem = ({ post }: { post: Post }) => {
   return (
     <div className="group relative aspect-square cursor-pointer">
       <Image
-        src={post.mediaUrl}
-        alt={post.caption || post.mediaUrl}
+        src={post.mediaUrls[0]}
+        alt={post.caption || post.mediaUrls[0]}
         width={300}
         height={300}
         className="size-full rounded-md object-cover"

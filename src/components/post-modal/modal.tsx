@@ -1,7 +1,7 @@
 "use client";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { closeModal } from "@/store/slices/modal.slice";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import { CreatePostModal } from "./create-post";
 import { SellProductModal } from "./sell-product";
 
 export const Modal = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { isOpen, modalType, modalProps } = useSelector(
     (state: RootState) => state.modal
   );

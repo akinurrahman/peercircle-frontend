@@ -13,7 +13,7 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  images: string[];
+  mediaUrls: string[];
   likes: number;
   comments: number;
 }
@@ -25,7 +25,7 @@ export default function ProductsGrid({ profileId }: { profileId?: string }) {
   const fetchProducts = async (profileId = "") => {
     setIsLoading(true);
     try {
-      const response = await profileApis.products.getAll(
+      const response = await profileApis.product.getAll(
         `?profileId=${profileId}`
       );
       setProducts(response);
@@ -62,7 +62,7 @@ const ProductItem = ({ product }: { product: Product }) => {
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="group relative aspect-square">
         <Image
-          src={product.images[0]}
+          src={product.mediaUrls[0]}
           alt={`Product `}
           width={300}
           height={300}

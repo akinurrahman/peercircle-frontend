@@ -4,6 +4,6 @@ export const profileApis = {
   profile: generateApis("/profile"),
   followUnfollow: generateApis("/toggle-follow-unfollow"),
   checkUsernameAvailability: generateApis("/check-username"),
-  posts: generateApis("/posts"),
-  products: generateApis("/product"),
+  post: generateApis("/post"),
+  product: generateApis("/product"),
 };

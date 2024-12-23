@@ -12,13 +12,12 @@ import {
   FileArchiveIcon,
   Upload,
 } from "lucide-react";
-import { uploadToCloud } from "@/services/apis/file-upload/file.api";
 
 interface FileUploadFieldProps {
   field: any;
   accept?: string;
   multiple?: boolean;
-  onChange?: (value: any) => void;
+  onChange?: (value: File[]) => void;
 }
 
 const FileUploadField: React.FC<FileUploadFieldProps> = ({
@@ -46,7 +45,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   }, [previewFiles]);
 
   const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       if (files) {
         const newFiles = Array.from(files);
@@ -61,16 +60,8 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         }));
 
         setPreviewFiles((prev) => [...prev, ...newPreviews]);
-
-        const uploadedUrls = await uploadToCloud(allFiles);
-        if (uploadedUrls) {
-          const updatedUrls = Array.isArray(uploadedUrls)
-            ? uploadedUrls
-            : [uploadedUrls];
-          const combinedUrls = [...existingFiles, ...updatedUrls];
-          field.onChange(combinedUrls);
-          if (onChange) onChange(combinedUrls);
-        }
+        field.onChange(allFiles);
+        if (onChange) onChange(allFiles);
       }
     },
     [field, onChange]
@@ -138,7 +129,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       <div className="flex w-full items-center justify-center">
         <label
           htmlFor="dropzone-file"
-          className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors duration-300 hover:bg-gray-100"
+          className="flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-300"
         >
           <div className="flex flex-col items-center justify-center pb-6 pt-5">
             <Upload className="mb-3 size-10 text-gray-400" />
