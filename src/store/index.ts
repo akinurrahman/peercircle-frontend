@@ -1,25 +1,11 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import signupReducer from "./slices/auth/signup.slice";
-import forgotPasswordReducer from "./slices/auth/forgot-password.slice";
-import commonAuthReducer from "./slices/auth/common.slice";
-import loginReducer from "./slices/auth/login.slice";
-import profileReducer from "./slices/profile/profile.slice";
+import {  configureStore } from "@reduxjs/toolkit";
+import modalReducer from "./slices/modal.slice";
 
-const authReducer = combineReducers({
-  login: loginReducer,
-  signup: signupReducer,
-  forgot: forgotPasswordReducer,
-  common: commonAuthReducer,
-});
 
-const profileReducers = combineReducers({
-  profile: profileReducer,
-});
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
-    profile: profileReducers,
+    modal : modalReducer
   },
 });
 

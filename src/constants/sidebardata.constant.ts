@@ -9,6 +9,7 @@ import {
   Settings,
   Shield,
   User,
+  Wallet,
 } from "lucide-react";
 
 export interface SidebarItem {
@@ -24,7 +25,8 @@ export const sidebarItems: SidebarItem[] = [
   { icon: Compass, label: "Explore", href: "/explore" },
   { icon: MessageCircle, label: "Messages", href: "/messages" },
   { icon: Bell, label: "Notifications", href: "/notifications" },
-  { icon: PlusCircle, label: "Create", href: "/create" },
+  { icon: PlusCircle, label: "Create post" },
+  { icon: Wallet, label: "Sell Product" },
   {
     icon: User,
     label: "Profile",

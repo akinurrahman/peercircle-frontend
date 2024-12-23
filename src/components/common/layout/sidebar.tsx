@@ -3,17 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { sidebarItems } from "@/constants/sidebardata.constant";
 import { ModeToggle } from "./mode-toggler";
 import { useTheme } from "next-themes";
 import { imageConstant } from "@/constants/images.constant";
 import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store";
-import { fetchBasicProfileInfo } from "@/store/slices/profile/profile.slice";
 import SidebarButton from "./sidebar-button";
+import { Modal } from "../../post-modal/modal";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -73,6 +70,7 @@ export default function Sidebar() {
           <ModeToggle />
         </div>
       </div>
+      <Modal/>
     </div>
   );
 }
