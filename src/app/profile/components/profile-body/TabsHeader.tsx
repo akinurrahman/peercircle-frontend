@@ -1,7 +1,7 @@
 "use client";
 
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Grid } from "lucide-react";
+import { Grid, ShoppingCart } from "lucide-react";
 
 export default function TabsHeader() {
   return (
@@ -17,7 +17,7 @@ export default function TabsHeader() {
         value="products"
         className="flex h-full items-center gap-2 rounded-none border-b-2 border-transparent px-0 data-[state=active]:border-primary data-[state=active]:bg-transparent"
       >
-        <Grid className="size-5" />
+        <ShoppingCart className="size-5" />
         <span className="font-semibold">Products</span>
       </TabsTrigger>
     </TabsList>

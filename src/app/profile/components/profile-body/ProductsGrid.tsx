@@ -95,7 +95,7 @@ const ProductItem = ({ product }: { product: Product }) => {
 const NoProductsFound = () => {
   return (
     <div className="flex-center mt-6 h-40 rounded-md">
-      <p className="text-lg text-gray-500">No posts found</p>
+      <p className="text-lg text-gray-500">No product found</p>
     </div>
   );
 };
