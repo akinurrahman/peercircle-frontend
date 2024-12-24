@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreatePostModal } from "./create-post";
-// import { SellProductModal } from "./sell-product";
+import { SellProductModal } from "./sell-product";
 
 export const Modal = () => {
   const dispatch = useDispatch<AppDispatch>();

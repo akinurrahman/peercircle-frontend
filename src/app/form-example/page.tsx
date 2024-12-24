@@ -51,29 +51,29 @@ export default function ProfileForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormInput
-          type="input"
+          fieldType="input"
           name="username"
           label="Username"
           placeholder="johndoe"
           description="This is your public display name."
         />
         <FormInput
-          type="input"
+          fieldType="input"
           name="email"
           label="Email"
-          inputType="email"
+          type="email"
           placeholder="john@example.com"
           description="Your email address."
         />
         <FormInput
-          type="textarea"
+          fieldType="textarea"
           name="bio"
           label="Bio"
           placeholder="Tell us a little bit about yourself"
           description="Your bio will be displayed on your profile."
         />
         <FormInput
-          type="select"
+          fieldType="select"
           name="role"
           label="Role"
           placeholder="Select a role"
@@ -85,13 +85,13 @@ export default function ProfileForm() {
           ]}
         />
         <FormInput
-          type="checkbox"
+          fieldType="checkbox"
           name="newsletter"
           label="Subscribe to newsletter"
           description="Receive updates about our products and services."
         />
         <FormInput
-          type="radio"
+          fieldType="radio"
           name="notificationPreference"
           label="Notification Preference"
           description="Choose how you'd like to receive notifications."
@@ -102,7 +102,7 @@ export default function ProfileForm() {
           ]}
         />
         <FormInput
-          type="file"
+          fieldType="file"
           name="avatar"
           label="Avatar"
           description="Upload your profile picture."

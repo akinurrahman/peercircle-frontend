@@ -28,31 +28,31 @@ interface BaseFieldProps {
 }
 
 interface InputFieldProps extends BaseFieldProps {
-  type: "input";
-  inputType?: string;
+  fieldType: "input";
+  type?: string;
 }
 
 interface TextareaFieldProps extends BaseFieldProps {
-  type: "textarea";
+  fieldType: "textarea";
 }
 
 interface SelectFieldProps extends BaseFieldProps {
-  type: "select";
+  fieldType: "select";
   options: { value: string; label: string }[];
 }
 
 interface CheckboxFieldProps extends BaseFieldProps {
-  type: "checkbox";
+  fieldType: "checkbox";
 }
 
 interface RadioFieldProps extends BaseFieldProps {
-  type: "radio";
+  fieldType: "radio";
   options: { value: string; label: string }[];
   radioLayout?: "row" | "column";
 }
 
 interface FileFieldProps extends BaseFieldProps {
-  type: "file";
+  fieldType: "file";
   accept?: string;
   multiple?: boolean;
 }
@@ -87,11 +87,11 @@ export function FormInput(props: FormInputProps) {
 }
 
 function renderFieldByType(props: FormInputProps, field: any) {
-  switch (props.type) {
+  switch (props.fieldType) {
     case "input":
       return (
         <Input
-          type={props.inputType || "text"}
+          type={props.type || "text"}
           placeholder={props.placeholder}
           {...field}
         />

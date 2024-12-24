@@ -51,9 +51,9 @@ export const CreatePostModal = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <FormInput type="input" name="caption" label="Caption" />
+        <FormInput fieldType="input" name="caption" label="Caption" />
         <FormInput
-          type="file"
+          fieldType="file"
           name="mediaUrls"
           label="Upload Media"
           multiple

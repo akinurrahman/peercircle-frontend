@@ -135,7 +135,7 @@ export function EditProfileModal({
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="fullName">Name</Label>
               <div className="col-span-3">
-                <FormInput type="input" name="fullName" />
+                <FormInput fieldType="input" name="fullName" />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -143,7 +143,7 @@ export function EditProfileModal({
                 Username
               </Label>
               <div className="col-span-3">
-                <FormInput type="input" name="username" />
+                <FormInput fieldType="input" name="username" />
                 <div className="mt-1.5">
                   {username && (
                     <>
@@ -167,14 +167,14 @@ export function EditProfileModal({
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="bio">Bio</Label>
               <div className="col-span-3">
-                <FormInput type="textarea" name="bio" />
+                <FormInput fieldType="textarea" name="bio" />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label>Gender</Label>
               <FormInput
                 name="gender"
-                type="radio"
+                fieldType="radio"
                 options={[
                   { label: "Male", value: "male" },
                   { label: "Female", value: "female" },
@@ -186,13 +186,13 @@ export function EditProfileModal({
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="location">Location</Label>
               <div className="col-span-3">
-                <FormInput type="input" name="location" />
+                <FormInput fieldType="input" name="location" />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="website_url">Website</Label>
               <div className="col-span-3">
-                <FormInput type="input" name="website_url" />
+                <FormInput fieldType="input" name="website_url" />
               </div>
             </div>
             <DialogFooter>
