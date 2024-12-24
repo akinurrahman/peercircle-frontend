@@ -1,60 +1,117 @@
 "use client";
-import React from "react";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, FormProvider } from "react-hook-form";
 import * as z from "zod";
-import { Form } from "@/components/ui/form";
+
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/common/FormInput";
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  files: z.array(z.string()).optional(),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  bio: z.string().min(10, {
+    message: "Bio must be at least 10 characters.",
+  }),
+  role: z.string({
+    required_error: "Please select a role.",
+  }),
+  newsletter: z.boolean().default(false),
+  notificationPreference: z.enum(["email", "sms", "push"], {
+    required_error: "Please select a notification preference.",
+  }),
+  avatar: z.array(z.instanceof(File)).optional(),
 });
 
-function ExampleForm() {
+export default function ProfileForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      files: [],
+      email: "",
+      bio: "",
+      role: "",
+      newsletter: false,
+      notificationPreference: "email",
+      avatar: undefined,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, "up");
+    console.log(values);
   }
 
   return (
+    // <FormProvider {...form}>
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto max-w-md space-y-8 p-6"
-      >
-        <h1 className="mb-6 text-2xl font-bold">Form Example</h1>
-
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormInput
-          fieldType="input"
+          type="input"
           name="username"
           label="Username"
-          placeholder="Enter your username"
+          placeholder="johndoe"
+          description="This is your public display name."
         />
-
         <FormInput
-          fieldType="file"
-          name="files"
-          label="Upload Files"
-          description="Upload one or more files"
+          type="input"
+          name="email"
+          label="Email"
+          inputType="email"
+          placeholder="john@example.com"
+          description="Your email address."
+        />
+        <FormInput
+          type="textarea"
+          name="bio"
+          label="Bio"
+          placeholder="Tell us a little bit about yourself"
+          description="Your bio will be displayed on your profile."
+        />
+        <FormInput
+          type="select"
+          name="role"
+          label="Role"
+          placeholder="Select a role"
+          description="Select your role in the organization."
+          options={[
+            { value: "admin", label: "Admin" },
+            { value: "user", label: "User" },
+            { value: "guest", label: "Guest" },
+          ]}
+        />
+        <FormInput
+          type="checkbox"
+          name="newsletter"
+          label="Subscribe to newsletter"
+          description="Receive updates about our products and services."
+        />
+        <FormInput
+          type="radio"
+          name="notificationPreference"
+          label="Notification Preference"
+          description="Choose how you'd like to receive notifications."
+          options={[
+            { value: "email", label: "Email" },
+            { value: "sms", label: "SMS" },
+            { value: "push", label: "Push Notification" },
+          ]}
+        />
+        <FormInput
+          type="file"
+          name="avatar"
+          label="Avatar"
+          description="Upload your profile picture."
           accept="image/*"
           multiple
         />
-
         <Button type="submit">Submit</Button>
       </form>
     </Form>
+    // {/* </FormProvider> */}
   );
 }
-
-export default ExampleForm;

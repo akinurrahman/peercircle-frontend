@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -46,11 +46,19 @@ export function EditProfileModal({
   });
 
   const {
+    watch,
     formState: { isSubmitting },
   } = form;
 
   const checkUsernameAvailability = debounce(async (username: string) => {
-    if (!username) return;
+    if (!username) {
+      setIsUsernameAvailable(false);
+      return;
+    }
+    if (username === profile.username) {
+      setIsUsernameAvailable(true);
+      return;
+    }
     try {
       const response =
         await profileApis.checkUsernameAvailability.getOne(username);
@@ -59,7 +67,12 @@ export function EditProfileModal({
       console.error("Error checking username availability:", error);
       setIsUsernameAvailable(false);
     }
-  }, 500);
+  }, 300);
+
+  const username = watch("username");
+  useEffect(() => {
+    checkUsernameAvailability(username);
+  }, [username, checkUsernameAvailability]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -122,7 +135,7 @@ export function EditProfileModal({
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="fullName">Name</Label>
               <div className="col-span-3">
-                <FormInput fieldType="input" name="fullName" />
+                <FormInput type="input" name="fullName" />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -130,21 +143,23 @@ export function EditProfileModal({
                 Username
               </Label>
               <div className="col-span-3">
-                <FormInput
-                  fieldType="input"
-                  name="username"
-                  onChange={checkUsernameAvailability}
-                />
+                <FormInput type="input" name="username" />
                 <div className="mt-1.5">
-                  {isUsernameAvailable === true && (
-                    <p className="text-xs text-green-500">
-                      Username is available!
-                    </p>
-                  )}
-                  {isUsernameAvailable === false && (
-                    <p className="text-xs text-red-500">
-                      Username is taken. Try another.
-                    </p>
+                  {username && (
+                    <>
+                      {isUsernameAvailable && username !== profile.username && (
+                        <p className="text-xs text-green-500">
+                          Username is available!
+                        </p>
+                      )}
+                      {!isUsernameAvailable && (
+                        <p className="text-xs text-red-500">
+                          {username === profile.username
+                            ? "This is your current username"
+                            : "Username is taken. Try another."}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -152,14 +167,14 @@ export function EditProfileModal({
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="bio">Bio</Label>
               <div className="col-span-3">
-                <FormInput fieldType="textarea" name="bio" />
+                <FormInput type="textarea" name="bio" />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label>Gender</Label>
               <FormInput
                 name="gender"
-                fieldType="radio"
+                type="radio"
                 options={[
                   { label: "Male", value: "male" },
                   { label: "Female", value: "female" },
@@ -171,19 +186,19 @@ export function EditProfileModal({
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="location">Location</Label>
               <div className="col-span-3">
-                <FormInput fieldType="input" name="location" />
+                <FormInput type="input" name="location" />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="website_url">Website</Label>
               <div className="col-span-3">
-                <FormInput fieldType="input" name="website_url" />
+                <FormInput type="input" name="website_url" />
               </div>
             </div>
             <DialogFooter>
               <Button
                 type="submit"
-                disabled={!isUsernameAvailable || isSubmitting}
+                disabled={!isUsernameAvailable || isSubmitting || !username}
               >
                 {isSubmitting ? "Saving..." : "Save changes"}
               </Button>

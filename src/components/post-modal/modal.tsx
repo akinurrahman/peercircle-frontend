@@ -6,11 +6,12 @@ import { closeModal } from "@/store/slices/modal.slice";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreatePostModal } from "./create-post";
-import { SellProductModal } from "./sell-product";
+// import { SellProductModal } from "./sell-product";
 
 export const Modal = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,6 +41,11 @@ export const Modal = () => {
               ? "Create a New Post"
               : "Sell a Product"}
           </DialogTitle>
+          <DialogDescription>
+            {modalType === "CREATE_POST"
+              ? "Provide details to create a new post."
+              : "Enter product details to list it for sale."}
+          </DialogDescription>
         </DialogHeader>
         {renderModalContent()}
       </DialogContent>
