@@ -9,16 +9,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import FileUploadField from "./file-upload-field";
+import { ChevronDown } from "lucide-react";
 
 interface BaseFieldProps {
   name: string;
@@ -106,20 +101,34 @@ function renderFieldByType(props: FormInputProps, field: any) {
       );
     case "select":
       return (
-        <Select onValueChange={field.onChange} defaultValue={field.value}>
-          <FormControl>
-            <SelectTrigger>
-              <SelectValue placeholder={props.placeholder} />
-            </SelectTrigger>
-          </FormControl>
-          <SelectContent>
+        <div className="relative">
+          <select
+            {...field}
+            className="h-10 w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm font-medium shadow-sm focus:border-ring focus:outline-none focus:ring-[.5px] focus:ring-ring"
+          >
+            <option
+              value=""
+              disabled
+              selected
+              hidden
+              className="text-muted-foreground"
+            >
+              {props.placeholder}
+            </option>
             {props.options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <option
+                key={option.value}
+                value={option.value}
+                className="font-medium"
+              >
                 {option.label}
-              </SelectItem>
+              </option>
             ))}
-          </SelectContent>
-        </Select>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+            <ChevronDown className="size-4 text-muted-foreground" />
+          </div>
+        </div>
       );
     case "checkbox":
       return (

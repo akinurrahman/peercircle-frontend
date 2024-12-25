@@ -1,9 +1,17 @@
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "../common/FormInput";
+import { useCategory } from "@/services/apis/common.api";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { uploadToCloud } from "@/services/apis/file-upload/file.api";
+import { profileApis } from "@/services/apis/profile/profile.api";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { closeModal } from "@/store/slices/modal.slice";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -21,11 +29,17 @@ const formSchema = z.object({
   price: z.string().min(1, {
     message: "Price is required.",
   }),
-  mediaUrls: z.array(z.string()).optional(),
+  mediaUrls: z
+    .array(z.instanceof(File))
+    .nonempty("At least one media file is required"),
 });
 
+type SellProductSchemaType = z.infer<typeof formSchema>
+
 export const SellProductModal = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { categories } = useCategory()
+  const dispatch = useDispatch<AppDispatch>()
+  const form = useForm<SellProductSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -37,8 +51,25 @@ export const SellProductModal = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+
+
+  const onSubmit: SubmitHandler<SellProductSchemaType> = async (data) => {
+
+    try {
+      const mediaUrls = await uploadToCloud(data.mediaUrls);
+      await profileApis.product.create({
+        name: data.name,
+        description: data.description,
+        category: data.category,
+        condition: data.condition,
+        price: data.price,
+        mediaUrls
+      })
+      toast.success("Product created successfully");
+      dispatch(closeModal())
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   return (
@@ -50,28 +81,24 @@ export const SellProductModal = () => {
           name="description"
           label="Description"
         />
-        <div className="flex gap-5">
+        <div className="grid grid-cols-3 gap-3">
           <FormInput
             name="category"
-            label="Category"
             fieldType="select"
-            options={[
-              { label: "Electronics", value: "electronics" },
-              { label: "Clothing", value: "clothing" },
-              { label: "Home", value: "home" },
-              { label: "Toys", value: "toys" },
-            ]}
+            placeholder="Category"
+            options={categories.map((category) => ({ label: category.name, value: category._id }))}
           />
           <FormInput
             fieldType="select"
             name="condition"
-            label="Condition"
+            placeholder="Condition"
             options={[
               { label: "New", value: "new" },
               { label: "Used", value: "used" },
+              { label: "Refurbished", value: "refurbished" },
             ]}
           />
-          <FormInput fieldType="input" name="price" label="Price" />
+          <FormInput fieldType="input" name="price" placeholder="Price" />
         </div>
         <FormInput
           fieldType="file"

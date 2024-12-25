@@ -1,117 +1,105 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider } from "react-hook-form";
-import * as z from "zod";
+import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
 
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { FormInput } from "@/components/common/FormInput";
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
   }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
+  category: z.string({
+    required_error: "Please select a category.",
   }),
-  bio: z.string().min(10, {
-    message: "Bio must be at least 10 characters.",
-  }),
-  role: z.string({
-    required_error: "Please select a role.",
-  }),
-  newsletter: z.boolean().default(false),
-  notificationPreference: z.enum(["email", "sms", "push"], {
-    required_error: "Please select a notification preference.",
-  }),
-  avatar: z.array(z.instanceof(File)).optional(),
-});
+})
 
-export default function ProfileForm() {
+export default function Home() {
+  const [isOpen, setIsOpen] = useState(false)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      bio: "",
-      role: "",
-      newsletter: false,
-      notificationPreference: "email",
-      avatar: undefined,
+      name: "",
+      category: "",
     },
-  });
+  })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log(values)
+    setIsOpen(false)
   }
 
   return (
-    // <FormProvider {...form}>
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormInput
-          fieldType="input"
-          name="username"
-          label="Username"
-          placeholder="johndoe"
-          description="This is your public display name."
-        />
-        <FormInput
-          fieldType="input"
-          name="email"
-          label="Email"
-          type="email"
-          placeholder="john@example.com"
-          description="Your email address."
-        />
-        <FormInput
-          fieldType="textarea"
-          name="bio"
-          label="Bio"
-          placeholder="Tell us a little bit about yourself"
-          description="Your bio will be displayed on your profile."
-        />
-        <FormInput
-          fieldType="select"
-          name="role"
-          label="Role"
-          placeholder="Select a role"
-          description="Select your role in the organization."
-          options={[
-            { value: "admin", label: "Admin" },
-            { value: "user", label: "User" },
-            { value: "guest", label: "Guest" },
-          ]}
-        />
-        <FormInput
-          fieldType="checkbox"
-          name="newsletter"
-          label="Subscribe to newsletter"
-          description="Receive updates about our products and services."
-        />
-        <FormInput
-          fieldType="radio"
-          name="notificationPreference"
-          label="Notification Preference"
-          description="Choose how you'd like to receive notifications."
-          options={[
-            { value: "email", label: "Email" },
-            { value: "sms", label: "SMS" },
-            { value: "push", label: "Push Notification" },
-          ]}
-        />
-        <FormInput
-          fieldType="file"
-          name="avatar"
-          label="Avatar"
-          description="Upload your profile picture."
-          accept="image/*"
-          multiple
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
-    // {/* </FormProvider> */}
-  );
+    <div className="flex items-center justify-center min-h-screen">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline">Open Form</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Enter Details</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select a category</option>
+                        <option value="category1">Category 1</option>
+                        <option value="category2">Category 2</option>
+                        <option value="category3">Category 3</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
 }
+
