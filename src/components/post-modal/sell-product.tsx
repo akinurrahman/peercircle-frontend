@@ -34,11 +34,11 @@ const formSchema = z.object({
     .nonempty("At least one media file is required"),
 });
 
-type SellProductSchemaType = z.infer<typeof formSchema>
+type SellProductSchemaType = z.infer<typeof formSchema>;
 
 export const SellProductModal = () => {
-  const { categories } = useCategory()
-  const dispatch = useDispatch<AppDispatch>()
+  const { categories } = useCategory();
+  const dispatch = useDispatch<AppDispatch>();
   const form = useForm<SellProductSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,10 +51,7 @@ export const SellProductModal = () => {
     },
   });
 
-
-
   const onSubmit: SubmitHandler<SellProductSchemaType> = async (data) => {
-
     try {
       const mediaUrls = await uploadToCloud(data.mediaUrls);
       await profileApis.product.create({
@@ -63,10 +60,10 @@ export const SellProductModal = () => {
         category: data.category,
         condition: data.condition,
         price: data.price,
-        mediaUrls
-      })
+        mediaUrls,
+      });
       toast.success("Product created successfully");
-      dispatch(closeModal())
+      dispatch(closeModal());
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -86,7 +83,10 @@ export const SellProductModal = () => {
             name="category"
             fieldType="select"
             placeholder="Category"
-            options={categories.map((category) => ({ label: category.name, value: category._id }))}
+            options={categories.map((category) => ({
+              label: category.name,
+              value: category._id,
+            }))}
           />
           <FormInput
             fieldType="select"

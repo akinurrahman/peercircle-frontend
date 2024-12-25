@@ -40,7 +40,7 @@ export default function Sidebar() {
             <SidebarButton
               key={index}
               item={item}
-              isActive={pathname === item.href}
+              isActive={item.href ? pathname?.startsWith(item.href) : false}
             />
           ))}
         </nav>

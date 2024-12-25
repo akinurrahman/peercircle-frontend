@@ -7,18 +7,16 @@ export const commonApis = {
   category: generateApis("/category"),
 };
 
-
-
 interface Category {
   _id: string;
   name: string;
 }
 export const useCategory = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const getAllCategory = async () => {
     try {
       const categories = await commonApis.category.getAll();
-      setCategories(categories)
+      setCategories(categories);
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
