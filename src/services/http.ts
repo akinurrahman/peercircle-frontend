@@ -1,11 +1,10 @@
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 import {
   accessTokenCookie,
   refreshTokenCookie,
 } from "@/constants/config.constant";
-import { getErrorMessage } from "@/utils/getErrorMessage";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
 
 // Create an Axios instance
 const http = axios.create({
@@ -27,7 +26,41 @@ http.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle 401 errors
+// Function to refresh the access token
+const refreshAccessToken = async () => {
+  try {
+    const refreshToken = Cookies.get(refreshTokenCookie); // Get the refresh token from cookies
+
+    if (!refreshToken) {
+      throw new Error("Refresh token not available");
+    }
+
+    // Call the API to refresh the access token
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/refresh-token`,
+      { refreshToken: refreshAccessToken },
+      {
+        withCredentials: true, // Ensure cookies are sent
+      }
+    );
+
+    const { accessToken } = response.data;
+
+    // Save the new access token in cookies
+    Cookies.set(accessTokenCookie, accessToken);
+
+    return accessToken;
+  } catch (error) {
+    toast.error("Session expired. Please log in again.");
+    // Clear cookies and redirect to login if the refresh fails
+    Cookies.remove(accessTokenCookie);
+    Cookies.remove(refreshTokenCookie);
+    window.location.href = "/login";
+    throw error;
+  }
+};
+
+// Add response interceptor to handle errors based on code
 http.interceptors.response.use(
   (response) => {
     return response; // Return the response if no error
@@ -35,30 +68,35 @@ http.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Check if the error is 401 and we haven't already tried refreshing the token
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true; // Mark the request as retrying to avoid infinite loops
+    // Check for specific error codes and statuses
+    if (error.response) {
+      const { status, data } = error.response;
 
-      try {
-        // Attempt to refresh the access token
-        // const newAccessToken = await refreshAccessToken();
+      // If 401 and specific token-related error codes, attempt refresh
+      if (
+        status === 401 &&
+        data?.code === "TOKEN_INVALID" &&
+        !originalRequest._retry
+      ) {
+        originalRequest._retry = true; // Mark the request as retrying to avoid infinite loops
 
-        // Set the new access token in the headers of the original request
-        // originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        try {
+          // Attempt to refresh the access token
+          const newAccessToken = await refreshAccessToken();
 
-        // Retry the original request with the new access token
-        return http(originalRequest);
-      } catch (refreshError) {
-        // If token refresh fails, we already handled the logout in refreshAccessToken
-        return Promise.reject(refreshError);
+          // Set the new access token in the headers of the original request
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+
+          // Retry the original request with the new access token
+          return http(originalRequest);
+        } catch (refreshError) {
+          // If token refresh fails, reject the promise
+          return Promise.reject(refreshError);
+        }
       }
     }
 
-    // If the error is not 401, just reject the promise
+    // If the error does not match any specific case, just reject the promise
     return Promise.reject(error);
   }
 );

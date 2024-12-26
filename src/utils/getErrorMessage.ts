@@ -2,7 +2,6 @@ import { ERROR_MESSAGE } from "@/constants/common.constant";
 import { ApiError } from "@/constants/interface.constant";
 
 export const getErrorMessage = (error: unknown): string => {
-  console.log(error);
   if (isApiError(error)) {
     return error.response?.data?.message || ERROR_MESSAGE;
   }

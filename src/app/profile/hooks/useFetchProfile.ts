@@ -68,7 +68,6 @@ export const useFetchProfile = (
       );
 
       setIsFollowing(response?.isFollowing);
-      toast.success(response?.message);
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

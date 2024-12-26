@@ -3,8 +3,7 @@ import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ReduxProvider from "@/store/redux-provider";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -38,7 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ReduxProvider>{children}</ReduxProvider>
-          <ToastContainer />
+          <Toaster richColors duration={2000} position="top-right" />
         </ThemeProvider>
       </body>
     </html>
