@@ -6,4 +6,5 @@ export const profileApis = {
   checkUsernameAvailability: generateApis("/check-username"),
   post: generateApis("/post"),
   product: generateApis("/product"),
+  basicProfile: generateApis("/basic-profile"),
 };
