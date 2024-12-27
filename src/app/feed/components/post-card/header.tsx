@@ -8,16 +8,37 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MoreHorizontal } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Post } from "../../hooks/useFetchPosts";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { profileApis } from "@/services/apis/profile/profile.api";
 
 interface HeaderProps {
   post: Post;
 }
 
 const Header: React.FC<HeaderProps> = ({ post }) => {
+  const [isFollowing, setIsFollowing] = useState<boolean>(post?.isFollowing);
+  useEffect(() => {
+    setIsFollowing(post?.isFollowing);
+  }, [post]);
+
+  const toggleIsFollowing = async () => {
+    try {
+      const response = await profileApis.followUnfollow.updateOne(
+        post.authorId,
+        {
+          isFollowing: !isFollowing,
+        }
+      );
+      setIsFollowing(response?.isFollowing);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
   return (
     <CardHeader className="flex flex-row items-center space-y-0 p-4">
       <Link href={post.isMine ? "/profile" : `/profile/${post.authorId}`}>
@@ -35,12 +56,12 @@ const Header: React.FC<HeaderProps> = ({ post }) => {
       </div>
       {!post.isMine && (
         <Button
-          variant={post.isFollowing ? "secondary" : "default"}
+          variant={isFollowing ? "secondary" : "default"}
           size="sm"
-          onClick={() => {}}
+          onClick={toggleIsFollowing}
           className="ml-auto mr-2"
         >
-          {post.isFollowing ? "Following" : "Follow"}
+          {isFollowing ? "Following" : "Follow"}
         </Button>
       )}
       <TooltipProvider>

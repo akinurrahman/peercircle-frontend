@@ -11,10 +11,12 @@ export interface Post {
   authorName: string;
   authorId: string;
   isMine: boolean;
+  isLikedByMe: boolean;
   username: string;
   profilePicture: string;
   commentCount: number;
   isFollowing: boolean;
+  isBookmarkedByMe: boolean;
   randomComments: {
     commentId: string;
     text: string;

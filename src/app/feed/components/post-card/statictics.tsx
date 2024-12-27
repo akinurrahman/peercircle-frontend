@@ -12,12 +12,17 @@ import {
 import { Bookmark, Heart, MessageCircle, Send, Smile } from "lucide-react";
 import React from "react";
 import { Post } from "../../hooks/useFetchPosts";
+import { useLikeToggle } from "../../hooks/useLikeToggle";
+import { useBookMarkToggle } from "../../hooks/useBookMarkToggle";
 
 interface StaticticsProps {
   post: Post;
 }
 
 const Statictics: React.FC<StaticticsProps> = ({ post }) => {
+  const { isLiked, likeCount, toggleLike } = useLikeToggle(post);
+  const { isBookmarked, toggleBookMark } = useBookMarkToggle(post);
+
   return (
     <CardFooter className="flex flex-col items-start p-4">
       <div className="mb-2 flex w-full justify-between">
@@ -28,17 +33,18 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => {}}
-                  className={true ? "text-red-500" : ""}
+                  onClick={toggleLike}
+                  className={isLiked ? "text-red-500" : ""}
                 >
                   <Heart
-                    className="h-6 w-6"
-                    fill={true ? "currentColor" : "none"}
-                  />
+                    className="size-6"
+                    fill={isLiked ? "currentColor" : "none"}
+                  />{" "}
+                  {likeCount}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{true ? "Unlike" : "Like"}</p>
+                <p>{isLiked ? "Unlike" : "Like"}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -46,7 +52,7 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <MessageCircle className="h-6 w-6" />
+                  <MessageCircle className="size-6" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -58,7 +64,7 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <Send className="h-6 w-6" />
+                  <Send className="size-6" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -73,17 +79,17 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {}}
-                className={true ? "text-yellow-500" : ""}
+                onClick={toggleBookMark}
+                className={isBookmarked ? "text-yellow-500" : ""}
               >
                 <Bookmark
-                  className="h-6 w-6"
-                  fill={true ? "currentColor" : "none"}
+                  className="size-6"
+                  fill={isBookmarked ? "currentColor" : "none"}
                 />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{true ? "Unsave" : "Save"}</p>
+              <p>{isBookmarked ? "Unsave" : "Save"}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -95,9 +101,9 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
       </p>
       <Button
         variant="link"
-        className="h-auto p-0 text-xs text-muted-foreground"
+        className={`my-1 h-auto p-0 text-xs text-muted-foreground ${post?.commentCount === 0 ? "hidden" : ""}`}
       >
-        {/* View all {post.comments.length} comments */}
+        View all {post?.commentCount} comments
       </Button>
       {/* <Dialog>
           <DialogTrigger asChild>
@@ -117,12 +123,12 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
             </ScrollArea>
           </DialogContent>
         </Dialog> */}
-      {/* {post.comments.slice(0, 2).map((comment) => (
-              <p key={comment.id} className="text-sm">
-                  <span className="font-semibold">{comment.author} </span>
-                  {comment.text}
-              </p>
-          ))} */}
+      {post.randomComments?.map((comment) => (
+        <p key={comment.commentId} className="my-0.5 text-sm">
+          <span className="font-medium">{comment.commenterName} </span>
+          {comment.text}
+        </p>
+      ))}
 
       <Separator className="my-4" />
       <div className="flex w-full items-center">
