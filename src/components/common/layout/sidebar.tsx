@@ -16,6 +16,7 @@ import { AppDispatch, RootState } from "@/store";
 import { fetchBasicProfile } from "@/store/slices/profile.slice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import TooltipWrapper from "../tooltip-wrapper";
+import { getInitials } from "@/utils";
 
 export default function Sidebar() {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,8 +30,9 @@ export default function Sidebar() {
     setLogoSrc(isDark ? imageConstant.darkModeLogo : imageConstant.logo);
   }, [isDark]);
 
-  const { basicProfile } = useSelector((state: RootState) => state.profile);
-  const { fullName, email, profilePicture, username } = basicProfile || {};
+  const { fullName, email, profilePicture } = useSelector(
+    (state: RootState) => state.profile?.basicProfile
+  );
   useEffect(() => {
     dispatch(fetchBasicProfile());
   }, [dispatch]);
@@ -65,14 +67,7 @@ export default function Sidebar() {
               alt={fullName}
               className="object-cover"
             />
-            <AvatarFallback>
-              {fullName
-                ? fullName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                : "?"}
-            </AvatarFallback>
+            <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{fullName}</p>

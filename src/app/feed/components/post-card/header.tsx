@@ -14,6 +14,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { profileApis } from "@/services/apis/profile/profile.api";
+import { getInitials } from "@/utils";
 
 interface HeaderProps {
   post: Post;
@@ -47,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ post }) => {
             src={post.profilePicture}
             alt={`${post.authorName}'s avatar`}
           />
-          <AvatarFallback>{post.authorName.charAt(0)}</AvatarFallback>
+          <AvatarFallback>{getInitials(post.authorName)}</AvatarFallback>
         </Avatar>
       </Link>
       <div className="ml-3 grow">

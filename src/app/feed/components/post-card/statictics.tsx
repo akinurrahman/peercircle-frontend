@@ -10,6 +10,9 @@ import { Post } from "../../hooks/useFetchPosts";
 import { useLikeToggle } from "../../hooks/useLikeToggle";
 import { useBookMarkToggle } from "../../hooks/useBookMarkToggle";
 import TooltipWrapper from "@/components/common/tooltip-wrapper";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { getInitials } from "@/utils";
 
 interface StaticticsProps {
   post: Post;
@@ -18,6 +21,9 @@ interface StaticticsProps {
 const Statictics: React.FC<StaticticsProps> = ({ post }) => {
   const { isLiked, likeCount, toggleLike } = useLikeToggle(post);
   const { isBookmarked, toggleBookMark } = useBookMarkToggle(post);
+  const { fullName, email, profilePicture } = useSelector(
+    (state: RootState) => state.profile?.basicProfile
+  );
 
   return (
     <CardFooter className="flex flex-col items-start p-4">
@@ -100,8 +106,12 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
       <Separator className="my-4" />
       <div className="flex w-full items-center">
         <Avatar className="mr-2 size-8">
-          <AvatarImage src="/placeholder-avatar.jpg" alt="Your Avatar" />
-          <AvatarFallback>YA</AvatarFallback>
+          <AvatarImage
+            className="object-cover"
+            src={profilePicture}
+            alt={fullName}
+          />
+          <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
         </Avatar>
         <Input
           placeholder="Add a comment..."

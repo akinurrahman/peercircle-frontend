@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { useFetchProfile } from "../hooks/useFetchProfile";
 import { EditProfileModal } from "./EditProfileModal";
+import { getInitials } from "@/utils";
 
 interface ProfileHeaderProps {
   isPersonalView?: boolean;
@@ -60,14 +61,7 @@ export default function ProfileHeader({
               alt={profile?.fullName}
               className="object-cover"
             />
-            <AvatarFallback>
-              {profile?.fullName
-                ? profile.fullName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                : "?"}
-            </AvatarFallback>
+            <AvatarFallback>{getInitials(profile?.fullName)}</AvatarFallback>
           </Avatar>
           <div className="grow text-center sm:text-left">
             <div className="mb-2 flex items-center justify-center gap-2 sm:justify-start">

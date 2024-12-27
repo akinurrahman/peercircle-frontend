@@ -26,7 +26,13 @@ export const fetchBasicProfile = createAsyncThunk<BasicProfile>(
 );
 
 const initialState = {
-  basicProfile: null as BasicProfile | null,
+  basicProfile: {
+    _id: "",
+    username: "",
+    fullName: "",
+    email: "",
+    profilePicture: "",
+  } as BasicProfile,
 };
 
 const profileSlice = createSlice({
