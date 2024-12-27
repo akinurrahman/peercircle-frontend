@@ -28,10 +28,10 @@ const PostSkeleton = () => {
         <div className="mb-2 flex w-full justify-between">
           <div className="flex space-x-2">
             {[1, 2, 3].map((_, index) => (
-              <Skeleton key={index} className="h-8 w-8 rounded-full" />
+              <Skeleton key={index} className="size-8 rounded-full" />
             ))}
           </div>
-          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="size-8 rounded-full" />
         </div>
         <Skeleton className="mb-1 h-4 w-24" />
         <Skeleton className="mb-1 h-4 w-full" />
@@ -42,9 +42,9 @@ const PostSkeleton = () => {
         ))}
         <Separator className="my-4" />
         <div className="flex w-full items-center">
-          <Skeleton className="mr-2 h-8 w-8 rounded-full" />
-          <Skeleton className="h-8 flex-grow" />
-          <Skeleton className="ml-2 h-8 w-8 rounded-full" />
+          <Skeleton className="mr-2 size-8 rounded-full" />
+          <Skeleton className="h-8 grow" />
+          <Skeleton className="ml-2 size-8 rounded-full" />
           <Skeleton className="ml-2 h-8 w-16" />
         </div>
       </CardFooter>
