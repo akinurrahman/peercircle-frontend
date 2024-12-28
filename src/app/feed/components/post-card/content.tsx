@@ -1,10 +1,7 @@
 import { CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/zoom";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Zoom } from "swiper/modules";
 import { Post } from "../../hooks/useFetchPosts";

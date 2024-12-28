@@ -31,7 +31,7 @@ export default function Sidebar() {
   }, [isDark]);
 
   const { fullName, email, profilePicture } = useSelector(
-    (state: RootState) => state.profile?.basicProfile
+    (state: RootState) => state.profile.basicProfile
   );
   useEffect(() => {
     dispatch(fetchBasicProfile());

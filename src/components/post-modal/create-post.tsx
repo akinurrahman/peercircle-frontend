@@ -57,7 +57,7 @@ export const CreatePostModal = () => {
           name="mediaUrls"
           label="Upload Media"
           multiple
-          accept="image/*,video/*"
+          accept="image/*"
         />
         <Button
           type="submit"

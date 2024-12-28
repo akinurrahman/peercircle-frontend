@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 import { Bookmark, Heart, MessageCircle, Send } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Post } from "../../hooks/useFetchPosts";
 import { useLikeToggle } from "../../hooks/useLikeToggle";
 import { useBookMarkToggle } from "../../hooks/useBookMarkToggle";
@@ -13,6 +13,10 @@ import TooltipWrapper from "@/components/common/tooltip-wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getInitials } from "@/utils";
+import { useComments } from "../../hooks/useComments";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import CommentsModal from "./comment-modal";
 
 interface StaticticsProps {
   post: Post;
@@ -21,8 +25,11 @@ interface StaticticsProps {
 const Statictics: React.FC<StaticticsProps> = ({ post }) => {
   const { isLiked, likeCount, toggleLike } = useLikeToggle(post);
   const { isBookmarked, toggleBookMark } = useBookMarkToggle(post);
+  const { commentInput, setCommentInput, addComment, fetchComments } =
+    useComments();
+
   const { fullName, email, profilePicture } = useSelector(
-    (state: RootState) => state.profile?.basicProfile
+    (state: RootState) => state.profile.basicProfile
   );
 
   return (
@@ -72,30 +79,20 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
         <span className="font-semibold">{post?.username} </span>
         {post.caption}
       </p>
-      <Button
-        variant="link"
-        className={`my-1 h-auto p-0 text-xs text-muted-foreground ${post?.commentCount === 0 ? "hidden" : ""}`}
-      >
-        View all {post?.commentCount} comments
-      </Button>
-      {/* <Dialog>
-          <DialogTrigger asChild>
-            
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <ScrollArea className="h-[300px] pr-4">
-              {post.comments.map((comment) => (
-                <div key={comment.id} className="mb-4">
-                  <p className="text-sm">
-                    <span className="font-semibold">{comment.author} </span>
-                    {comment.text}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{formatTimestamp(comment.createdAt)}</p>
-                </div>
-              ))}
-            </ScrollArea>
-          </DialogContent>
-        </Dialog> */}
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="link"
+            className={`my-1 h-auto p-0 text-xs text-muted-foreground ${
+              post?.commentCount === 0 ? "hidden" : ""
+            }`}
+          >
+            View all {post?.commentCount} comments
+          </Button>
+        </DialogTrigger>
+        <CommentsModal post={post} />
+      </Dialog>
       {post.randomComments?.map((comment) => (
         <p key={comment.commentId} className="my-0.5 text-sm">
           <span className="font-medium">{comment.commenterName} </span>
@@ -115,15 +112,15 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
         </Avatar>
         <Input
           placeholder="Add a comment..."
-          value={""}
-          onChange={() => {}}
+          value={commentInput}
+          onChange={(e) => setCommentInput(e.target.value)}
           className="grow border-none bg-transparent text-sm"
         />
 
         <Button
           variant="ghost"
           className="font-semibold text-primary"
-          onClick={() => {}}
+          onClick={() => addComment(post._id)}
           disabled={false}
         >
           Post

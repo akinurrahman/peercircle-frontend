@@ -5,6 +5,11 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import ReduxProvider from "@/store/redux-provider";
 import { Toaster } from "sonner";
 
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/zoom";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
