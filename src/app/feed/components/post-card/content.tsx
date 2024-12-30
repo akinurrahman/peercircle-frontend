@@ -25,8 +25,7 @@ const MainContent: React.FC<MainContentProps> = ({ post }) => {
             <Image
               src={url}
               alt={`Post image ${index + 1}`}
-              layout="fill"
-              objectFit="cover"
+              fill
               className="rounded-md"
             />
           </SwiperSlide>

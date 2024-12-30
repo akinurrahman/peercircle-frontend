@@ -1,34 +1,32 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+"use client";
 import { CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-
-import { Bookmark, Heart, MessageCircle, Send } from "lucide-react";
 import React, { useState } from "react";
 import { Post } from "../../hooks/useFetchPosts";
-import { useLikeToggle } from "../../hooks/useLikeToggle";
-import { useBookMarkToggle } from "../../hooks/useBookMarkToggle";
+import { Button } from "@/components/ui/button";
+import CommentModal from "./comment-modal";
 import TooltipWrapper from "@/components/common/tooltip-wrapper";
+import { Bookmark, Heart, MessageCircle, Send } from "lucide-react";
+import { useBookMarkToggle } from "../../hooks/useBookMarkToggle";
+import { useLikeToggle } from "../../hooks/useLikeToggle";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/utils";
+import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { getInitials } from "@/utils";
 import { useComments } from "../../hooks/useComments";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import CommentsModal from "./comment-modal";
 
 interface StaticticsProps {
   post: Post;
 }
 
-const Statictics: React.FC<StaticticsProps> = ({ post }) => {
-  const { isLiked, likeCount, toggleLike } = useLikeToggle(post);
+const Statictics = ({ post }: StaticticsProps) => {
+  const [openItemId, setOpenItemId] = useState<string | null>(null);
   const { isBookmarked, toggleBookMark } = useBookMarkToggle(post);
-  const { commentInput, setCommentInput, addComment, fetchComments } =
-    useComments();
+  const { isLiked, likeCount, toggleLike } = useLikeToggle(post);
+  const { commentInput, setCommentInput, addComment } = useComments();
 
-  const { fullName, email, profilePicture } = useSelector(
+  const { fullName, profilePicture } = useSelector(
     (state: RootState) => state.profile.basicProfile
   );
 
@@ -80,25 +78,22 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
         {post.caption}
       </p>
 
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="link"
-            className={`my-1 h-auto p-0 text-xs text-muted-foreground ${
-              post?.commentCount === 0 ? "hidden" : ""
-            }`}
-          >
-            View all {post?.commentCount} comments
-          </Button>
-        </DialogTrigger>
-        <CommentsModal post={post} />
-      </Dialog>
-      {post.randomComments?.map((comment) => (
-        <p key={comment.commentId} className="my-0.5 text-sm">
-          <span className="font-medium">{comment.commenterName} </span>
-          {comment.text}
-        </p>
-      ))}
+      <Button
+        variant="link"
+        onClick={() => setOpenItemId(post._id)}
+        className={`my-1 h-auto p-0 text-xs text-muted-foreground ${
+          post?.commentCount === 0 ? "hidden" : ""
+        }`}
+      >
+        View all {post?.commentCount} comments
+      </Button>
+      {openItemId === post?._id && (
+        <CommentModal
+          postId={post._id}
+          open={true}
+          onOpenChange={() => setOpenItemId(null)}
+        />
+      )}
 
       <Separator className="my-4" />
       <div className="flex w-full items-center">
@@ -121,7 +116,6 @@ const Statictics: React.FC<StaticticsProps> = ({ post }) => {
           variant="ghost"
           className="font-semibold text-primary"
           onClick={() => addComment(post._id)}
-          disabled={false}
         >
           Post
         </Button>

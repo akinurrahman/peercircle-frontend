@@ -6,5 +6,4 @@ export const feedApis = {
   toggleLike: generateApis("/post/like-unlike"),
   toggleBookmark: generateApis("/post/bookmark"),
   comment: generateApis("/post/comment"),
-  getAllComments: generateApis("/comments"),
 };

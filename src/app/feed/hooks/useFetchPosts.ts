@@ -17,13 +17,6 @@ export interface Post {
   commentCount: number;
   isFollowing: boolean;
   isBookmarkedByMe: boolean;
-  randomComments: {
-    commentId: string;
-    text: string;
-    commenterName: string;
-    commenterId: string;
-    profilePicture: string;
-  }[];
 }
 
 export const useFetchPosts = () => {
