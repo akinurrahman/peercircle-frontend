@@ -15,7 +15,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
-    <Card className="mb-6 w-full border-none shadow-md">
+    <Card className="mb-6 w-full border-none shadow-none">
       <Header post={post} />
       <MainContent post={post} />
       <Statictics post={post} />

@@ -1,10 +1,16 @@
+"use client";
+
 import { CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Zoom } from "swiper/modules";
 import { Post } from "../../hooks/useFetchPosts";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface MainContentProps {
   post: Post;
@@ -13,24 +19,27 @@ interface MainContentProps {
 const MainContent: React.FC<MainContentProps> = ({ post }) => {
   return (
     <CardContent className="p-0">
-      <Swiper
-        modules={[Navigation, Pagination, Zoom]}
-        navigation
-        pagination={{ clickable: true }}
-        zoom={{ maxRatio: 3, minRatio: 1 }}
-        className="aspect-square w-full"
-      >
-        {post.mediaUrls.map((url, index) => (
-          <SwiperSlide key={index} className="swiper-zoom-container">
-            <Image
-              src={url}
-              alt={`Post image ${index + 1}`}
-              fill
-              className="rounded-md"
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <Carousel className="relative w-full">
+        <CarouselContent>
+          {post.mediaUrls.map((url) => (
+            <CarouselItem key={url}>
+              <div
+                className="relative w-full overflow-hidden rounded-md"
+                style={{ paddingBottom: "100%" }}
+              >
+                <Image
+                  src={url}
+                  alt={url}
+                  fill
+                  className="rounded-md object-cover"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="absolute-y-center left-3 z-10" />
+        <CarouselNext className="absolute-y-center right-3 z-10" />
+      </Carousel>
     </CardContent>
   );
 };

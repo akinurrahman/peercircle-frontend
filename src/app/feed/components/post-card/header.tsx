@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { profileApis } from "@/services/apis/profile/profile.api";
 import { getInitials } from "@/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface HeaderProps {
   post: Post;
@@ -51,9 +52,14 @@ const Header: React.FC<HeaderProps> = ({ post }) => {
           <AvatarFallback>{getInitials(post.authorName)}</AvatarFallback>
         </Avatar>
       </Link>
-      <div className="ml-3 grow">
-        <p className="text-sm font-semibold">{post.authorName}</p>
-        <p className="text-xs text-muted-foreground">@{post.username}</p>
+      <div className="ml-3 flex grow">
+        <div>
+          <p className="text-sm font-semibold">{post.authorName}</p>
+          <p className="text-xs text-muted-foreground">@{post.username}</p>
+        </div>
+        <div className={`${post.isMine ? "ml-4 block" : "hidden"}`}>
+          <Badge>Author</Badge>
+        </div>
       </div>
       {!post.isMine && (
         <Button

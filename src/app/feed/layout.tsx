@@ -9,7 +9,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <LayoutWrapper>
-      <div className="mx-auto max-w-xl">
+      <div className="mx-auto max-w-lg">
         <FeedNavigation />
         {children}
       </div>
