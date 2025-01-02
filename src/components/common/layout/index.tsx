@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import Sidebar from "../common/layout/sidebar";
+import Sidebar from "./sidebar";
+import SuggestedUsers from "./suggested-users";
 interface LayoutWrapperProps {
   children: ReactNode;
   showRightSidebar?: boolean;
@@ -16,9 +17,9 @@ export default function LayoutWrapper({
       </div>
       <div className="grow overflow-y-auto">{children}</div>
       {showRightSidebar && (
-        <div className="hidden w-[280px] shrink-0 overflow-y-auto bg-red-500 xl:block">
+        <div className="hidden w-[330px] shrink-0 overflow-y-auto xl:block">
           <div className="p-4">
-            <p>hello world</p>
+            <SuggestedUsers />
           </div>
         </div>
       )}

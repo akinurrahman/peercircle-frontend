@@ -1,4 +1,4 @@
-import LayoutWrapper from "@/components/layout/user-feed-layout";
+import LayoutWrapper from "@/components/common/layout";
 import Profile from "@/app/profile/components";
 import React from "react";
 

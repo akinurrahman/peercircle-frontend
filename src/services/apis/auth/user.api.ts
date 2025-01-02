@@ -4,4 +4,5 @@ export const authApis = {
   register: generateApis("/register"),
   verifyOtp: generateApis("/verify-email"),
   login: generateApis("/login"),
+  suggestedUsers: generateApis("/suggested-users"),
 };

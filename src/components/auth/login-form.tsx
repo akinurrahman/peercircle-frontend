@@ -14,7 +14,7 @@ import {
   refreshTokenCookie,
 } from "@/constants/config.constant";
 import { getErrorMessage } from "@/utils/getErrorMessage";
-import { authApis } from "@/services/apis/auth/auth.api";
+import { authApis } from "@/services/apis/auth/user.api";
 import Cookies from "js-cookie";
 import { FormInput } from "../common/FormInput";
 

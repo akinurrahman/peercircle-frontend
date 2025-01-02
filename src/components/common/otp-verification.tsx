@@ -20,7 +20,7 @@ import { Mail } from "lucide-react";
 import { ButtonLoader } from "./loader/loader";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import Cookies from "js-cookie";
-import { authApis } from "@/services/apis/auth/auth.api";
+import { authApis } from "@/services/apis/auth/user.api";
 import {
   accessTokenCookie,
   defaultAuthenticationPath,

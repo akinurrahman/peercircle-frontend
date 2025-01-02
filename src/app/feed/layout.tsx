@@ -1,4 +1,4 @@
-import LayoutWrapper from "@/components/layout/user-feed-layout";
+import LayoutWrapper from "@/components/common/layout";
 import React, { ReactNode } from "react";
 import { FeedNavigation } from "./FeedNavigation";
 

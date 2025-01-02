@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ButtonLoader } from "@/components/common/loader/loader";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { authApis } from "@/services/apis/auth/auth.api";
+import { authApis } from "@/services/apis/auth/user.api";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import Cookies from "js-cookie";
 import { FormInput } from "../common/FormInput";

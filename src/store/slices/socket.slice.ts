@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface SocketState {
+  connected: boolean;
+  onlineUsers: string[];
+}
+
+const initialState: SocketState = {
   connected: false,
   onlineUsers: [],
 };
