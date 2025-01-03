@@ -94,6 +94,14 @@ http.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       }
+
+      // If the error code is TOKEN_NOT_FOUND, redirect to the login page
+      if (data?.code === "TOKEN_NOT_FOUND") {
+        toast.error("Token not found. Please log in again.");
+        Cookies.remove(accessTokenCookie);
+        Cookies.remove(refreshTokenCookie);
+        window.location.href = "/login"; // Redirect to login page
+      }
     }
 
     // If the error does not match any specific case, just reject the promise
