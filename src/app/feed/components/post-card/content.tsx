@@ -21,8 +21,8 @@ const MainContent: React.FC<MainContentProps> = ({ post }) => {
     <CardContent className="p-0">
       <Carousel className="relative w-full">
         <CarouselContent>
-          {post.mediaUrls.map((url) => (
-            <CarouselItem key={url}>
+          {post.mediaUrls.map((url, idx) => (
+            <CarouselItem key={url + idx}>
               <div
                 className="relative w-full overflow-hidden rounded-md"
                 style={{ paddingBottom: "100%" }}

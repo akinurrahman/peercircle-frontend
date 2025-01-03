@@ -4,7 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ReduxProvider from "@/store/redux-provider";
 import { Toaster } from "sonner";
-import ManageOnlineUsers from "@/components/sockets/manage-online-users";
+import SocketManager from "@/components/sockets/socket-manager";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -38,10 +38,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ReduxProvider>
+            <SocketManager />
             {children}
-            <ManageOnlineUsers />
+            <Toaster richColors duration={2000} position="top-right" />
           </ReduxProvider>
-          <Toaster richColors duration={2000} position="top-right" />
         </ThemeProvider>
       </body>
     </html>

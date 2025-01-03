@@ -5,18 +5,13 @@ import { ButtonLoader } from "@/components/common/loader/loader";
 import { loginSchema, LoginSchemaType } from "@/validations/auth.schema";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-import {
-  accessTokenCookie,
-  defaultFeedPath,
-  refreshTokenCookie,
-} from "@/constants/config.constant";
-import { getErrorMessage } from "@/utils/getErrorMessage";
-import { authApis } from "@/services/apis/auth/user.api";
-import Cookies from "js-cookie";
+import { defaultFeedPath } from "@/constants/config.constant";
 import { FormInput } from "../common/FormInput";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { loginUser } from "@/store/slices/auth.slice";
 
 const LogInForm = () => {
   const router = useRouter();
@@ -28,25 +23,15 @@ const LogInForm = () => {
     },
     resolver: zodResolver(loginSchema),
   });
-  const {
-    handleSubmit,
-    setError,
-    formState: { isSubmitting, errors },
-  } = form;
+  const { handleSubmit } = form;
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { status, error } = useSelector((state: RootState) => state.auth);
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
-    try {
-      const response = await authApis.login.create(data);
-      toast.success(response.message);
-      Cookies.set(accessTokenCookie, response.accessToken);
-      Cookies.set(refreshTokenCookie, response.refreshToken);
-      Cookies.set("id", response.user?.id);
+    const result = await dispatch(loginUser(data));
+    if (loginUser.fulfilled.match(result)) {
       router.push(defaultFeedPath);
-    } catch (err) {
-      setError("root", {
-        type: "manual",
-        message: getErrorMessage(err),
-      });
     }
   };
   return (
@@ -76,17 +61,15 @@ const LogInForm = () => {
           variant="primary"
           type="submit"
           className="w-full"
-          disabled={isSubmitting}
+          disabled={status === "loading"}
         >
-          {isSubmitting ? (
+          {status === "loading" ? (
             <ButtonLoader loadingText="Logging in..." />
           ) : (
             " Login"
           )}
         </Button>
-        {errors.root && (
-          <p className="mt-2 text-sm text-red-500">{errors.root.message}</p>
-        )}
+        {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
       </form>
     </Form>
   );
