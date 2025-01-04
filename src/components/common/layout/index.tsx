@@ -12,7 +12,7 @@ export default function LayoutWrapper({
 }: LayoutWrapperProps) {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
-      <div className="hidden w-[280px] shrink-0 md:block">
+      <div className="hidden w-[280px] shrink-0 lg:block">
         <Sidebar />
       </div>
       <div className="grow overflow-y-auto">{children}</div>

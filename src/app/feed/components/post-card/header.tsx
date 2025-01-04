@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ post }) => {
             src={post.profilePicture}
             alt={`${post.authorName}'s avatar`}
           />
-          <AvatarFallback>{getInitials(post.authorName)}</AvatarFallback>
+          <AvatarFallback>{getInitials(post?.authorName)}</AvatarFallback>
         </Avatar>
       </Link>
       <div className="ml-3 flex grow">

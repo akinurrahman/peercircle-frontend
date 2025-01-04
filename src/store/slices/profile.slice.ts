@@ -18,7 +18,7 @@ export const fetchBasicProfile = createAsyncThunk<BasicProfile>(
   "profile/fetchBasicProfile",
   async () => {
     try {
-      if(!userId) return
+      if (!userId) return;
       const data = await profileApis.basicProfile.getAll();
       return data;
     } catch (error) {
