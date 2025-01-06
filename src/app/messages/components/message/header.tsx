@@ -14,7 +14,6 @@ const MessageHeader = () => {
   const { onlineUsers } = useSelector((state: RootState) => state.socket);
   // const { receiverInfo } = useSelector((state: RootState) => state.chat);
 
-
   return (
     <div className="flex items-center justify-between border-b border-border p-4">
       <div className="flex items-center gap-4">
@@ -30,7 +29,7 @@ const MessageHeader = () => {
             </AvatarFallback>
           </Avatar>
           <div
-            // className={`absolute bottom-0 right-0 block size-3 rounded-full ring-1 ring-white ${onlineUsers.includes(receiverInfo?._id || "") ? "bg-green-500" : "bg-red-500"}`}
+          // className={`absolute bottom-0 right-0 block size-3 rounded-full ring-1 ring-white ${onlineUsers.includes(receiverInfo?._id || "") ? "bg-green-500" : "bg-red-500"}`}
           ></div>
         </div>
         <div>

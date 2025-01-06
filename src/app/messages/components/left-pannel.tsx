@@ -35,7 +35,7 @@ const LeftPannel = () => {
   }, []);
   return (
     <div className="space-y-4 p-6">
-      {users?.map(({userId,profilePicture,fullName,username}) => {
+      {users?.map(({ userId, profilePicture, fullName, username }) => {
         const isOnline = onlineUsers.includes(userId);
         return (
           <div key={userId}>
@@ -49,15 +49,11 @@ const LeftPannel = () => {
                   alt={fullName}
                   className="object-cover"
                 />
-                <AvatarFallback>
-                  {getInitials(fullName)}
-                </AvatarFallback>
+                <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
               </Avatar>
               <div className="grow">
                 <p className="font-medium">{fullName}</p>
-                <p className="text-sm text-muted-foreground">
-                  {username}
-                </p>
+                <p className="text-sm text-muted-foreground">{username}</p>
               </div>
               <Badge
                 variant={isOnline ? "success" : "secondary"}

@@ -14,12 +14,16 @@ interface Message {
 
 interface ChatState {
   messages: Message[];
+  currentChatUserId: string | null;
+  notifications: Message[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ChatState = {
   messages: [],
+  currentChatUserId: null,
+  notifications: [],
   loading: false,
   error: null,
 };
@@ -47,6 +51,38 @@ const chatSlice = createSlice({
     appendMessage: (state, action: PayloadAction<Message>) => {
       state.messages.push(action.payload);
     },
+
+    setCurrentChatUserId: (state, action: PayloadAction<string>) => {
+      const targetUserId = action.payload;
+
+      // Transfer relevant notifications to messages if switching to a new chat
+      if (targetUserId !== state.currentChatUserId) {
+        const relatedNotifications = state.notifications.filter(
+          (notification) => notification.senderId === targetUserId
+        );
+
+        // Add related notifications to messages
+        state.messages.push(...relatedNotifications);
+
+        // Remove transferred notifications from the notifications array
+        state.notifications = state.notifications.filter(
+          (notification) => notification.senderId !== targetUserId
+        );
+      }
+
+      // Update current chat user
+      state.currentChatUserId = targetUserId;
+    },
+
+    addIncomingMessage: (state, action: PayloadAction<Message>) => {
+      const message = action.payload;
+
+      if (state.currentChatUserId === message.senderId) {
+        state.messages.push(message);
+      } else {
+        state.notifications.push(message);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -65,6 +101,7 @@ const chatSlice = createSlice({
   },
 });
 
-export const { appendMessage } = chatSlice.actions;
+export const { appendMessage, setCurrentChatUserId, addIncomingMessage } =
+  chatSlice.actions;
 
 export default chatSlice.reducer;
