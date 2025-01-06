@@ -1,20 +1,24 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { getInitials } from "@/utils";
 import moment from "moment";
 import React, { useEffect, useRef } from "react";
 import Cookies from "js-cookie";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   disconnectSocket,
   initializeSocket,
 } from "@/services/socket/socket.service";
 import { handleIncomingMessages } from "@/services/socket/chat.service";
+import { fetchMessages } from "@/store/slices/chat.slice";
+import { useParams } from "next/navigation";
 
 const MessageScrollArea = () => {
   const myUserId = Cookies.get("id");
+  const params = useParams();
+  const receiverId = params.id;
+  const dispatch = useDispatch<AppDispatch>();
   const { messages } = useSelector((state: RootState) => state.chat);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -37,10 +41,17 @@ const MessageScrollArea = () => {
       disconnectSocket();
     };
   }, [myUserId]);
+
+
+  useEffect(() => {
+    if (receiverId) {
+      dispatch(fetchMessages(receiverId as string));
+    }
+  }, [receiverId, dispatch]);
   return (
     <div ref={scrollRef} className="grow overflow-y-auto p-4">
       {messages.map((msg) => {
-        const isMine = myUserId === msg._id;
+        const isMine = myUserId === msg.senderId;
 
         return (
           <div
