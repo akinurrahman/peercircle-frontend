@@ -1,4 +1,5 @@
 import { store } from "@/store";
+import { addIncomingMessage } from "@/store/slices/chat.slice";
 import { setConnected, setOnlineUsers } from "@/store/slices/socket.slice";
 import { io, Socket } from "socket.io-client";
 
@@ -22,6 +23,10 @@ export const initializeSocket = (userId: string): Socket => {
 
     socket.on("getOnlineUsers", (onlineUsers) => {
       store.dispatch(setOnlineUsers(onlineUsers));
+    });
+
+    socket.on("newMessage", (message) => {
+      store.dispatch(addIncomingMessage(message));
     });
   }
   return socket;

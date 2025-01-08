@@ -10,13 +10,11 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 
 interface User {
-  _id: string;
-  participants: {
-    _id: string;
-    fullName: string;
-    username: string;
-    profilePicture: string;
-  };
+  conversationId: string;
+  userId: string;
+  fullName: string;
+  username: string;
+  profilePicture?: string;
 }
 
 const LeftPannel = () => {
@@ -37,29 +35,25 @@ const LeftPannel = () => {
   }, []);
   return (
     <div className="space-y-4 p-6">
-      {users?.map((user) => {
-        const isOnline = onlineUsers.includes(user.participants?._id);
+      {users?.map(({ userId, profilePicture, fullName, username }) => {
+        const isOnline = onlineUsers.includes(userId);
         return (
-          <div key={user._id}>
+          <div key={userId}>
             <Link
-              href={`/messages/${user.participants?._id}`}
+              href={`/messages/${userId}`}
               className="flex items-center space-x-3"
             >
               <Avatar>
                 <AvatarImage
-                  src={user.participants?.profilePicture}
-                  alt={user.participants?.fullName}
+                  src={profilePicture}
+                  alt={fullName}
                   className="object-cover"
                 />
-                <AvatarFallback>
-                  {getInitials(user.participants?.fullName)}
-                </AvatarFallback>
+                <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
               </Avatar>
               <div className="grow">
-                <p className="font-medium">{user.participants?.fullName}</p>
-                <p className="text-sm text-muted-foreground">
-                  {user.participants?.username}
-                </p>
+                <p className="font-medium">{fullName}</p>
+                <p className="text-sm text-muted-foreground">{username}</p>
               </div>
               <Badge
                 variant={isOnline ? "success" : "secondary"}
