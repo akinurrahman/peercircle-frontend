@@ -7,16 +7,29 @@ import React, { useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchMessages, setCurrentChatUserId } from "@/store/slices/chat.slice";
+import {
+  fetchMessages,
+  setCurrentConversationId,
+} from "@/store/slices/chat.slice";
 import { useParams } from "next/navigation";
+import { joinChat, leaveChat } from "@/services/socket/socket.service";
+import { messageApis } from "@/services/apis/message/message.api";
 
 const MessageScrollArea = () => {
   const myUserId = Cookies.get("id");
   const params = useParams();
-  const targetUserId = params.id;
+  const conversationId = params.id as string;
   const dispatch = useDispatch<AppDispatch>();
-  const { messages } = useSelector((state: RootState) => state.chat);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const messages = useSelector((state: RootState) => state.chat.messages);
+
+  useEffect(() => {
+    if (conversationId) {
+      dispatch(setCurrentConversationId(conversationId));
+      dispatch(fetchMessages(conversationId));
+    }
+  }, [conversationId, dispatch]);
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
@@ -29,18 +42,26 @@ const MessageScrollArea = () => {
   }, [messages]);
 
   useEffect(() => {
-    dispatch(setCurrentChatUserId(targetUserId as string));
-
-    return () => {
-      dispatch(setCurrentChatUserId("")); // Clear on unmount
+    const markAsSeen = async () => {
+      if (conversationId) {
+        await messageApis.conversation.updateOne(conversationId as string, {});
+      }
     };
-  }, [targetUserId, dispatch]);
+    markAsSeen();
+  }, [messages, conversationId]);
 
   useEffect(() => {
-    if (targetUserId) {
-      dispatch(fetchMessages(targetUserId as string));
+    if (conversationId) {
+      joinChat(conversationId as string);
     }
-  }, [targetUserId, dispatch]);
+
+    return () => {
+      if (conversationId) {
+        leaveChat();
+      }
+    };
+  }, [conversationId]);
+
   return (
     <div ref={scrollRef} className="grow overflow-y-auto p-4">
       {messages.map((msg) => {

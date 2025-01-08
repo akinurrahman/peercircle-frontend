@@ -20,11 +20,11 @@ const SendMessage = () => {
     if (newMessage.trim() !== "") {
       try {
         const res = await messageApis.message.create({
-          receiverId: params.id,
+          conversationId: params.id,
           message: newMessage,
         });
-        setNewMessage("");
         dispatch(appendMessage(res));
+        setNewMessage("");
       } catch (error) {
         toast.error(getErrorMessage(error));
       }

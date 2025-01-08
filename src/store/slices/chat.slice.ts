@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { messageApis } from "@/services/apis/message/message.api";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { toast } from "sonner";
 
 interface Message {
   _id: string;
@@ -14,7 +15,7 @@ interface Message {
 
 interface ChatState {
   messages: Message[];
-  currentChatUserId: string | null;
+  conversationId: string | null;
   notifications: Message[];
   loading: boolean;
   error: string | null;
@@ -22,20 +23,20 @@ interface ChatState {
 
 const initialState: ChatState = {
   messages: [],
-  currentChatUserId: null,
+  conversationId: null,
   notifications: [],
   loading: false,
   error: null,
 };
 
-// Define the async thunk to fetch messages
+// Async thunk to fetch messages for a conversation
 export const fetchMessages = createAsyncThunk(
   "chat/fetchMessages",
-  async (receiverId: string, { rejectWithValue }) => {
+  async (conversationId: string, { rejectWithValue }) => {
     try {
-      if (!receiverId) return;
+      if (!conversationId) return [];
       const response = await messageApis.message.getAll(
-        `?receiverId=${receiverId}`
+        `?conversationId=${conversationId}`
       );
       return response; // This will be used as the payload in the fulfilled action
     } catch (error) {
@@ -48,40 +49,25 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    appendMessage: (state, action: PayloadAction<Message>) => {
+    appendMessage(state, action: PayloadAction<Message>) {
       state.messages.push(action.payload);
     },
-
-    setCurrentChatUserId: (state, action: PayloadAction<string>) => {
-      const targetUserId = action.payload;
-
-      // Transfer relevant notifications to messages if switching to a new chat
-      if (targetUserId !== state.currentChatUserId) {
-        const relatedNotifications = state.notifications.filter(
-          (notification) => notification.senderId === targetUserId
-        );
-
-        // Add related notifications to messages
-        state.messages.push(...relatedNotifications);
-
-        // Remove transferred notifications from the notifications array
-        state.notifications = state.notifications.filter(
-          (notification) => notification.senderId !== targetUserId
-        );
-      }
-
-      // Update current chat user
-      state.currentChatUserId = targetUserId;
+    setCurrentConversationId(state, action: PayloadAction<string | null>) {
+      state.conversationId = action.payload;
     },
-
-    addIncomingMessage: (state, action: PayloadAction<Message>) => {
-      const message = action.payload;
-
-      if (state.currentChatUserId === message.senderId) {
-        state.messages.push(message);
+    addIncomingMessage(state, action: PayloadAction<Message>) {
+      const { conversationId } = action.payload;
+      if (state.conversationId === conversationId) {
+        state.messages.push(action.payload);
       } else {
-        state.notifications.push(message);
+        state.notifications.push(action.payload);
+        toast.success(`${action.payload.fullName} has sent you a new message!`);
       }
+    },
+    clearNotifications(state, action: PayloadAction<string>) {
+      state.notifications = state.notifications.filter(
+        (notification) => notification.conversationId !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {
@@ -101,7 +87,11 @@ const chatSlice = createSlice({
   },
 });
 
-export const { appendMessage, setCurrentChatUserId, addIncomingMessage } =
-  chatSlice.actions;
+export const {
+  appendMessage,
+  setCurrentConversationId,
+  addIncomingMessage,
+  clearNotifications,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;

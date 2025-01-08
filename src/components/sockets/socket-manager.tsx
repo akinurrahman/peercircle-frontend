@@ -11,7 +11,7 @@ const SocketManager = () => {
   useEffect(() => {
     const userId = Cookies.get("id");
     if (userId) {
-      initializeSocket(userId);
+      initializeSocket();
     }
 
     return () => {

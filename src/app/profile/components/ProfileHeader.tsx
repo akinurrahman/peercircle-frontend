@@ -24,6 +24,10 @@ import Link from "next/link";
 import { useFetchProfile } from "../hooks/useFetchProfile";
 import { EditProfileModal } from "./EditProfileModal";
 import { getInitials } from "@/utils";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { messageApis } from "@/services/apis/message/message.api";
+import { useRouter } from "next/navigation";
 
 interface ProfileHeaderProps {
   isPersonalView?: boolean;
@@ -42,6 +46,8 @@ export default function ProfileHeader({
     isFollowing,
   } = useFetchProfile(isPersonalView, profileId);
 
+  const router = useRouter();
+
   const toggleFollow = () => {
     if (!profileId) return;
     toggleFollowUnfollow(profileId);
@@ -50,6 +56,18 @@ export default function ProfileHeader({
   if (isLoading || !profile) {
     return <ProfileHeaderSkeleton />;
   }
+
+  const redirectToMessage = async () => {
+    try {
+      const response = await messageApis.conversation.create({
+        receiverId: profileId,
+      });
+
+      router.push(`/messages/${response?.conversationId}`);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
 
   return (
     <div className="bg-background">
@@ -125,7 +143,12 @@ export default function ProfileHeader({
                   {isFollowing ? "Following" : "Follow"}
                   <UserPlus className="ml-2 size-4" />
                 </Button>
-                <Button variant="outline" size="sm" className="rounded-full">
+                <Button
+                  onClick={redirectToMessage}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full"
+                >
                   <Mail className="mr-2 size-4" />
                   Message
                 </Button>

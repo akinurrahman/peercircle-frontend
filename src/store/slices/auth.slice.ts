@@ -30,7 +30,7 @@ export const loginUser = createAsyncThunk<
     Cookies.set(accessTokenCookie, response.accessToken);
     Cookies.set(refreshTokenCookie, response.refreshToken);
     Cookies.set("id", response.user.id);
-    initializeSocket(response.user.id);
+    initializeSocket();
     return response.user;
   } catch (error) {
     return rejectWithValue(getErrorMessage(error));
