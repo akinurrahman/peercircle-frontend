@@ -12,7 +12,7 @@ import {
 } from "@/store/slices/message.slice";
 import { useParams } from "next/navigation";
 import { messageApis } from "@/services/apis/message/message.api";
-import { setActiveConversation } from "@/services/socket/socket.service";
+import { setActiveConversation } from "@/services/socket/message.service";
 
 const MessageScrollArea = () => {
   const myUserId = Cookies.get("id");
@@ -21,7 +21,7 @@ const MessageScrollArea = () => {
   const dispatch = useDispatch<AppDispatch>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const messages = useSelector((state: RootState) => state.chat.messages);
+  const { messages } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {
     if (conversationId) {

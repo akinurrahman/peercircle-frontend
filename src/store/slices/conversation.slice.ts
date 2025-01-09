@@ -29,7 +29,7 @@ export const fetchConversations = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await messageApis.conversation.getAll();
-      return response; // Assume this API includes unseen count
+      return response; 
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }
