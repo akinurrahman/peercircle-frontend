@@ -2,11 +2,14 @@ import { io, Socket } from "socket.io-client";
 import Cookies from "js-cookie";
 import { store } from "@/store";
 import { setConnected, setOnlineUsers } from "@/store/slices/socket.slice";
-import { addIncomingMessage } from "@/store/slices/chat.slice";
+import { appendMessage } from "@/store/slices/message.slice";
+import { incrementUnseenCount, resetUnseenCount } from "@/store/slices/conversation.slice";
 
 const userId = Cookies.get("id");
 
 let socket: Socket | null = null;
+
+let activeConversationId: string | null = null; // Track the currently active conversation
 
 export const initializeSocket = (): Socket => {
   if (!socket) {
@@ -28,31 +31,34 @@ export const initializeSocket = (): Socket => {
       store.dispatch(setOnlineUsers(onlineUsers));
     });
 
+    // Handle new messages
     socket.on("newMessage", (message) => {
-      store.dispatch(addIncomingMessage(message));
+      const { conversationId } = message;
+
+      // Append the message to the store
+      store.dispatch(appendMessage(message));
+
+      // Check if the user is in the active conversation
+      if (activeConversationId !== conversationId) {
+        // Increment unseen count for the conversation
+        store.dispatch(incrementUnseenCount({ conversationId }));
+      }
     });
   }
   return socket;
 };
 
+// Set the active conversation (when user views a conversation)
+export const setActiveConversation = (conversationId: string | null) => {
+  activeConversationId = conversationId;
+
+  if (conversationId) {
+    // Reset unseen count for this conversation
+    store.dispatch(resetUnseenCount({ conversationId }));
+  }
+};
+
 export const getSocket = (): Socket | null => socket;
-
-// Utility functions to emit socket events safely
-export const joinChat = (conversationId: string) => {
-  if (socket) {
-    socket.emit("joinChat", { userId, conversationId });
-  } else {
-    console.error("Socket is not connected!");
-  }
-};
-
-export const leaveChat = () => {
-  if (socket) {
-    socket.emit("leaveChat", { userId });
-  } else {
-    console.error("Socket is not connected!");
-  }
-};
 
 export const disconnectSocket = () => {
   if (socket) {

@@ -1,7 +1,7 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppDispatch, RootState } from "@/store";
-import { fetchMessages } from "@/store/slices/chat.slice";
+import { fetchMessages } from "@/store/slices/message.slice";
 import { getInitials } from "@/utils";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";

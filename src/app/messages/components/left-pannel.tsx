@@ -1,37 +1,23 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { messageApis } from "@/services/apis/message/message.api";
+import { AppDispatch, RootState } from "@/store";
+import { fetchConversations } from "@/store/slices/conversation.slice";
 import { getInitials } from "@/utils";
-import { getErrorMessage } from "@/utils/getErrorMessage";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-interface User {
-  userId: string;
-  fullName: string;
-  username: string;
-  profilePicture?: string;
-  conversationId?: string;
-  unseenCount: number;
-}
+
 
 const LeftPannel = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const dispatch = useDispatch<AppDispatch>()
+  const { conversations } = useSelector((state: RootState) => state.conversation)
 
-  const getAllConversations = async () => {
-    try {
-      const response = await messageApis.conversation.getAll();
-      setUsers(response);
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    }
-  };
 
   useEffect(() => {
-    getAllConversations();
-  }, []);
+    dispatch(fetchConversations())
+  }, [dispatch]);
   return (
     <div className="h-full border-r bg-background">
       <div className="p-4">
@@ -39,7 +25,7 @@ const LeftPannel = () => {
       </div>
       <ScrollArea className="h-[calc(100vh-5rem)]">
         <div className="space-y-2 p-4">
-          {users?.map(
+          {conversations?.map(
             ({
               profilePicture,
               fullName,
