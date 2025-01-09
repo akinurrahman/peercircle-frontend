@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { messageApis } from "@/services/apis/message/message.api";
 import { AppDispatch } from "@/store";
-import { appendMessage } from "@/store/slices/chat.slice";
+import { appendMessage } from "@/store/slices/message.slice";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";

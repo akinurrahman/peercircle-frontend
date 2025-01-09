@@ -9,11 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   fetchMessages,
-  setCurrentConversationId,
-} from "@/store/slices/chat.slice";
+} from "@/store/slices/message.slice";
 import { useParams } from "next/navigation";
-import { joinChat, leaveChat } from "@/services/socket/socket.service";
 import { messageApis } from "@/services/apis/message/message.api";
+import { setActiveConversation } from "@/services/socket/message.service";
 
 const MessageScrollArea = () => {
   const myUserId = Cookies.get("id");
@@ -22,11 +21,10 @@ const MessageScrollArea = () => {
   const dispatch = useDispatch<AppDispatch>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const messages = useSelector((state: RootState) => state.chat.messages);
+  const { messages } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {
     if (conversationId) {
-      dispatch(setCurrentConversationId(conversationId));
       dispatch(fetchMessages(conversationId));
     }
   }, [conversationId, dispatch]);
@@ -50,16 +48,14 @@ const MessageScrollArea = () => {
     markAsSeen();
   }, [messages, conversationId]);
 
+
   useEffect(() => {
     if (conversationId) {
-      joinChat(conversationId as string);
+      setActiveConversation(conversationId);
     }
-
     return () => {
-      if (conversationId) {
-        leaveChat();
-      }
-    };
+      setActiveConversation(null);
+    }
   }, [conversationId]);
 
   return (
@@ -83,9 +79,8 @@ const MessageScrollArea = () => {
                 <AvatarFallback>{getInitials(msg.fullName)}</AvatarFallback>
               </Avatar>
               <div
-                className={`mx-2 rounded-lg px-4 py-2 ${
-                  isMine ? "bg-primary text-primary-foreground" : "bg-secondary"
-                }`}
+                className={`mx-2 rounded-lg px-4 py-2 ${isMine ? "bg-primary text-primary-foreground" : "bg-secondary"
+                  }`}
               >
                 <p>{msg.message}</p>
                 <span className="text-xs opacity-50">

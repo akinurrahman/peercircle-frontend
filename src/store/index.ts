@@ -3,7 +3,8 @@ import authReducer from "./slices/auth.slice";
 import modalReducer from "./slices/modal.slice";
 import profileReducer from "./slices/profile.slice";
 import socketReducer from "./slices/socket.slice";
-import chatReducer from "./slices/chat.slice";
+import messageReducer from "./slices/message.slice";
+import conversationReducer from "./slices/conversation.slice";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     modal: modalReducer,
     profile: profileReducer,
     socket: socketReducer,
-    chat: chatReducer,
+    chat: messageReducer,
+    conversation: conversationReducer,
   },
 });
 
