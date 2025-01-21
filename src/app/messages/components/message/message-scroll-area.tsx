@@ -7,9 +7,7 @@ import React, { useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  fetchMessages,
-} from "@/store/slices/message.slice";
+import { fetchMessages } from "@/store/slices/message.slice";
 import { useParams } from "next/navigation";
 import { messageApis } from "@/services/apis/message/message.api";
 import { setActiveConversation } from "@/services/socket/message.service";
@@ -42,12 +40,16 @@ const MessageScrollArea = () => {
   useEffect(() => {
     const markAsSeen = async () => {
       if (conversationId) {
-        await messageApis.conversation.updateOne(conversationId as string, {});
+        const unseenMessages = messages.some(
+          (msg) => msg.senderId !== myUserId && !msg.seen
+        );
+        if (unseenMessages) {
+          await messageApis.conversation.updateOne(conversationId, {});
+        }
       }
     };
     markAsSeen();
-  }, [messages, conversationId]);
-
+  }, [messages, conversationId, myUserId]);
 
   useEffect(() => {
     if (conversationId) {
@@ -55,7 +57,7 @@ const MessageScrollArea = () => {
     }
     return () => {
       setActiveConversation(null);
-    }
+    };
   }, [conversationId]);
 
   return (
@@ -79,8 +81,9 @@ const MessageScrollArea = () => {
                 <AvatarFallback>{getInitials(msg.fullName)}</AvatarFallback>
               </Avatar>
               <div
-                className={`mx-2 rounded-lg px-4 py-2 ${isMine ? "bg-primary text-primary-foreground" : "bg-secondary"
-                  }`}
+                className={`mx-2 rounded-lg px-4 py-2 ${
+                  isMine ? "bg-primary text-primary-foreground" : "bg-secondary"
+                }`}
               >
                 <p>{msg.message}</p>
                 <span className="text-xs opacity-50">

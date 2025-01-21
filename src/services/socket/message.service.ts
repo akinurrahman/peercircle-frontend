@@ -8,7 +8,6 @@ import { Socket } from "socket.io-client";
 
 let activeConversationId: string | null = null;
 
-
 export const handleMessageSocketEvents = (socket: Socket) => {
   socket.on("newMessage", (message) => {
     const { conversationId } = message;

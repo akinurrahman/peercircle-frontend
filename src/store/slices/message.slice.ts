@@ -10,6 +10,7 @@ interface Message {
   createdAt: string;
   fullName: string;
   profilePicture?: string;
+  seen: boolean;
 }
 
 interface MessageState {
