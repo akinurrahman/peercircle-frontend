@@ -2,7 +2,10 @@
 
 import { useEffect } from "react";
 import Cookies from "js-cookie";
-import { initializeSocket, disconnectSocket } from "@/services/socket/socket.service";
+import {
+  initializeSocket,
+  disconnectSocket,
+} from "@/services/socket/socket.service";
 import { handleMessageSocketEvents } from "@/services/socket/message.service";
 import { handleUserSocketEvents } from "@/services/socket/user.service";
 
