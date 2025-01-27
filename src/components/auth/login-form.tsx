@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 
-import { defaultFeedPath } from "@/constants/config.constant";
 import { FormInput } from "../common/FormInput";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store";
-import { loginUser } from "@/store/slices/auth.slice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { setAccessToken, setUser } from "@/store/slices/auth.slice";
+import { authApis } from "@/services/apis/auth/user.api";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 const LogInForm = () => {
   const router = useRouter();
@@ -23,15 +24,25 @@ const LogInForm = () => {
     },
     resolver: zodResolver(loginSchema),
   });
-  const { handleSubmit } = form;
+  const {
+    handleSubmit,
+    setError,
+    formState: { isSubmitting, errors },
+  } = form;
 
   const dispatch = useDispatch<AppDispatch>();
-  const { status, error } = useSelector((state: RootState) => state.auth);
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
-    const result = await dispatch(loginUser(data));
-    if (loginUser.fulfilled.match(result)) {
-      router.push(defaultFeedPath);
+    try {
+      const response = await authApis.login.create(data);
+      dispatch(setUser(response.user));
+      dispatch(setAccessToken(response.accessToken));
+      router.push("/profile");
+    } catch (error) {
+      setError("root", {
+        type: "manual",
+        message: getErrorMessage(error),
+      });
     }
   };
   return (
@@ -61,15 +72,17 @@ const LogInForm = () => {
           variant="primary"
           type="submit"
           className="w-full"
-          disabled={status === "loading"}
+          disabled={isSubmitting}
         >
-          {status === "loading" ? (
+          {isSubmitting ? (
             <ButtonLoader loadingText="Logging in..." />
           ) : (
             " Login"
           )}
         </Button>
-        {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+        {errors.root && (
+          <p className="mt-2 text-sm text-red-500">{errors.root.message}</p>
+        )}
       </form>
     </Form>
   );

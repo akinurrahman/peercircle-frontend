@@ -19,34 +19,26 @@ import {
 import { Mail } from "lucide-react";
 import { ButtonLoader } from "./loader/loader";
 import { getErrorMessage } from "@/utils/getErrorMessage";
-import Cookies from "js-cookie";
 import { authApis } from "@/services/apis/auth/user.api";
-import {
-  accessTokenCookie,
-  defaultAuthenticationPath,
-  defaultFeedPath,
-} from "@/constants/config.constant";
+import { defaultAuthenticationPath } from "@/constants/config.constant";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const OtpVarification = () => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
-  const email = Cookies.get("email");
   const [isSubmitting, setIsSumbitting] = useState(false);
-  const hasToken = Cookies.get(accessTokenCookie) !== undefined;
   const router = useRouter();
+
+  const { email } = useSelector((state: RootState) => state.auth.user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSumbitting(true);
     try {
       await authApis.verifyOtp.create({ email, otp });
-      Cookies.set("isVerified", "true");
-      if (hasToken) {
-        router.push(defaultFeedPath);
-      } else {
-        router.push(defaultAuthenticationPath);
-      }
+      router.push(defaultAuthenticationPath);
     } catch (error) {
       setError(getErrorMessage(error));
     } finally {

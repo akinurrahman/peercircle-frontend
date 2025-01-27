@@ -11,15 +11,13 @@ import { imageConstant } from "@/constants/images.constant";
 import Image from "next/image";
 import SidebarButton from "./sidebar-button";
 import { Modal } from "../../post-modal/modal";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store";
-import { fetchBasicProfile } from "@/store/slices/profile.slice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import TooltipWrapper from "../tooltip-wrapper";
 import { getInitials } from "@/utils";
 
 export default function Sidebar() {
-  const dispatch = useDispatch<AppDispatch>();
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -31,11 +29,8 @@ export default function Sidebar() {
   }, [isDark]);
 
   const { fullName, email, profilePicture } = useSelector(
-    (state: RootState) => state.profile.basicProfile
+    (state: RootState) => state.auth.user
   );
-  useEffect(() => {
-    dispatch(fetchBasicProfile());
-  }, [dispatch]);
 
   return (
     <div className="flex h-full flex-col border-r bg-background text-foreground">

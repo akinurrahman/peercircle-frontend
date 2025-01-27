@@ -15,12 +15,14 @@ interface ConversationState {
   conversations: Conversation[];
   loading: boolean;
   error: string | null;
+  totalUnseenCount: number;
 }
 
 const initialState: ConversationState = {
   conversations: [],
   loading: false,
   error: null,
+  totalUnseenCount: 0,
 };
 
 // Fetch all conversations with unseen counts
@@ -49,6 +51,7 @@ const conversationSlice = createSlice({
       );
       if (conversation) {
         conversation.unseenCount += 1;
+        state.totalUnseenCount += 1;
       }
     },
     resetUnseenCount(state, action: PayloadAction<{ conversationId: string }>) {
@@ -56,6 +59,7 @@ const conversationSlice = createSlice({
         (c) => c.conversationId === action.payload.conversationId
       );
       if (conversation) {
+        state.totalUnseenCount -= conversation.unseenCount;
         conversation.unseenCount = 0;
       }
     },

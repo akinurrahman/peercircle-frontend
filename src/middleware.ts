@@ -1,31 +1,28 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
-  authenticationRoute,
-  protectedRoutes,
+  authenticationRoutes,
   defaultAuthenticationPath,
   defaultProtectedRoute,
   generateMatchers,
-  accessTokenCookie,
-} from "@/constants/config.constant";
+  protectedRoutes,
+} from "./constants/config.constant";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const token = req.cookies.get(accessTokenCookie)?.value;
-  const isAuthenticated = token !== undefined && token !== null && token !== "";
+  const isAuthenticated = req.cookies.has("refreshToken");
 
   // 1. If user is authenticated (has a token) and tries to access an authentication route
-  if (isAuthenticated && authenticationRoute.includes(pathname)) {
+  if (isAuthenticated && authenticationRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL(defaultProtectedRoute, req.url));
   }
 
   // 2. Redirect unauthenticated users accessing protected routes to the default authentication route
-  if (!isAuthenticated && protectedRoutes.user.includes(pathname)) {
+  if (!isAuthenticated && protectedRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL(defaultAuthenticationPath, req.url));
   }
 
-  // 3. Allow the request to proceed for other routes
+  // Allow the request to proceed
   return NextResponse.next();
 }
 

@@ -3,10 +3,10 @@
 import React from "react";
 
 import PostCard from "../components/post-card";
-import { useFetchPosts } from "../hooks/useFetchPosts";
 import PostSkeleton from "../components/post-card/post-skeleton";
+import { useFetchPosts } from "../hooks/useFetchPosts";
 
-const Posts: React.FC = () => {
+const Posts = () => {
   const { isLoading, posts } = useFetchPosts();
 
   if (isLoading) {

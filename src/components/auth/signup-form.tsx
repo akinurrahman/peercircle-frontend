@@ -9,8 +9,10 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { authApis } from "@/services/apis/auth/user.api";
 import { getErrorMessage } from "@/utils/getErrorMessage";
-import Cookies from "js-cookie";
 import { FormInput } from "../common/FormInput";
+import { setEmail } from "@/store/slices/auth.slice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
 
 interface SignUpField {
   label: string;
@@ -57,6 +59,7 @@ const signUpFields: SignUpField[] = [
 
 const SignUpForm = () => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const form = useForm<SignUpSchemaType>({
     mode: "onTouched",
     defaultValues: {
@@ -77,9 +80,8 @@ const SignUpForm = () => {
     try {
       const response = await authApis.register.create(data);
       toast.success(response.message);
+      dispatch(setEmail(data.email));
       router.push("/otp-verification");
-      Cookies.set("isVerified", "false");
-      Cookies.set("email", data.email);
     } catch (error) {
       console.log(error, "error");
       setError("root", {

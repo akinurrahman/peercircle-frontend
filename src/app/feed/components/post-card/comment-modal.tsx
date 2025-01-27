@@ -42,7 +42,7 @@ export default function CommentModal({
   } = useComments();
 
   const { profilePicture, fullName } = useSelector(
-    (state: RootState) => state.profile.basicProfile
+    (state: RootState) => state.auth.user
   );
 
   const [replyingTo, setReplyingTo] = useState<string | null>(null);

@@ -1,4 +1,4 @@
-export const authenticationRoute = [
+export const authenticationRoutes = [
   "/login",
   "/signup",
   "/otp-verification",
@@ -7,10 +7,7 @@ export const authenticationRoute = [
 ];
 
 // Protected routes for different roles
-export const protectedRoutes = {
-  admin: [],
-  user: ["/profile", "/settings"],
-};
+export const protectedRoutes = ["/profile", "/settings"];
 
 // Default redirect paths
 export const defaultProtectedRoute = "/profile";

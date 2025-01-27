@@ -1,110 +1,53 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
-import {
-  accessTokenCookie,
-  refreshTokenCookie,
-} from "@/constants/config.constant";
+import { store } from "@/store";
+import { logout, setAccessToken, setUser } from "@/store/slices/auth.slice";
 
-// Create an Axios instance
 const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1`,
   withCredentials: true,
 });
 
-// Add request interceptor to include the access token in the headers
-http.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get(accessTokenCookie); // Get the access token from cookies
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`; // Add the access token to the Authorization header
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error); // Handle any request errors
+// Request interceptor add Authorization header if token exists
+http.interceptors.request.use((config) => {
+  const { accessToken } = store.getState().auth;
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
-);
+  return config;
+});
 
-// Function to refresh the access token
-const refreshAccessToken = async () => {
-  try {
-    const refreshToken = Cookies.get(refreshTokenCookie); // Get the refresh token from cookies
-
-    if (!refreshToken) {
-      throw new Error("Refresh token not available");
-    }
-
-    // Call the API to refresh the access token
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/refresh-token`,
-      { refreshToken: refreshAccessToken },
-      {
-        withCredentials: true, // Ensure cookies are sent
-      }
-    );
-
-    const { accessToken } = response.data;
-
-    // Save the new access token in cookies
-    Cookies.set(accessTokenCookie, accessToken);
-
-    return accessToken;
-  } catch (error) {
-    toast.error("Session expired. Please log in again.");
-    // Clear cookies and redirect to login if the refresh fails
-    Cookies.remove(accessTokenCookie);
-    Cookies.remove(refreshTokenCookie);
-    window.location.href = "/login";
-    throw error;
-  }
-};
-
-// Add response interceptor to handle errors based on code
+// Response interceptor for handling token expiration
 http.interceptors.response.use(
-  (response) => {
-    return response; // Return the response if no error
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Check for specific error codes and statuses
-    if (error.response) {
-      const { status, data } = error.response;
+    if (
+      error.response?.status === 401 && // Unauthorized error
+      !originalRequest._retry // Prevent infinite retry loops
+    ) {
+      originalRequest._retry = true; // Mark request as retried
 
-      // If 401 and specific token-related error codes, attempt refresh
-      if (
-        status === 401 &&
-        data?.code === "TOKEN_INVALID" &&
-        !originalRequest._retry
-      ) {
-        originalRequest._retry = true; // Mark the request as retrying to avoid infinite loops
+      try {
+        const { data } = await http.post("/refresh", {
+          baseURL: process.env.NEXT_PUBLIC_API_URL,
+          withCredentials: true, // Ensure cookies are sent
+        });
 
-        try {
-          // Attempt to refresh the access token
-          const newAccessToken = await refreshAccessToken();
+        // Update token in Redux
+        store.dispatch(setAccessToken(data.data.accessToken));
+        store.dispatch(setUser(data.data.user));
 
-          // Set the new access token in the headers of the original request
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-
-          // Retry the original request with the new access token
-          return http(originalRequest);
-        } catch (refreshError) {
-          // If token refresh fails, reject the promise
-          return Promise.reject(refreshError);
-        }
-      }
-
-      // If the error code is TOKEN_NOT_FOUND, redirect to the login page
-      if (data?.code === "TOKEN_NOT_FOUND") {
-        toast.error("Token not found. Please log in again.");
-        Cookies.remove(accessTokenCookie);
-        Cookies.remove(refreshTokenCookie);
-        window.location.href = "/login"; // Redirect to login page
+        // Retry the original request with the new token
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        return http(originalRequest);
+      } catch (err) {
+        // Logout if refresh token fails
+        store.dispatch(logout());
+        return Promise.reject(err);
       }
     }
 
-    // If the error does not match any specific case, just reject the promise
     return Promise.reject(error);
   }
 );

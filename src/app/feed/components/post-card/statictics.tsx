@@ -27,7 +27,7 @@ const Statictics = ({ post }: StaticticsProps) => {
   const { commentInput, setCommentInput, addComment } = useComments();
 
   const { fullName, profilePicture } = useSelector(
-    (state: RootState) => state.profile.basicProfile
+    (state: RootState) => state.auth.user
   );
 
   return (
