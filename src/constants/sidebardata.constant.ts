@@ -20,7 +20,7 @@ export interface SidebarItem {
 }
 
 export const sidebarItems: SidebarItem[] = [
-  { icon: Home, label: "Home", href: "/feed" },
+  { icon: Home, label: "Home", href: "/feed/posts" },
   { icon: Search, label: "Search", href: "/search" },
   { icon: Compass, label: "Explore", href: "/explore" },
   { icon: MessageCircle, label: "Messages", href: "/messages" },

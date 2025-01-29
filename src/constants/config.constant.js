@@ -9,7 +9,7 @@ export const authenticationRoute = [
 // Protected routes for different roles
 export const protectedRoutes = {
   admin: [],
-  user: ["/profile", "/settings"],
+  user: ["/profile", "/settings", "/messages"],
 };
 
 // Default redirect paths
