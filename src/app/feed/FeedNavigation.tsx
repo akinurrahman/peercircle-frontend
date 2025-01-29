@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Grid, LayoutGrid, ShoppingCart } from "lucide-react";
 
 const routes = [
-  { value: "all", label: "All", path: "/feed", icon: LayoutGrid },
+  // { value: "all", label: "All", path: "/feed", icon: LayoutGrid },
   { value: "posts", label: "Posts", path: "/feed/posts", icon: Grid },
   {
     value: "products",

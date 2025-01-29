@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 
-const PostSkeleton = () => {
+const FeedSkeleton = () => {
   return (
     <Card className="mb-6 w-full border-none shadow-md">
       <CardHeader className="flex flex-row items-center space-y-0 p-4">
@@ -52,4 +52,4 @@ const PostSkeleton = () => {
   );
 };
 
-export default PostSkeleton;
+export default FeedSkeleton;

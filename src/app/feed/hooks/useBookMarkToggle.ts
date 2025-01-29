@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { Post } from "./useFetchPosts";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { feedApis } from "@/services/apis/feed/feed.api";
+import { Post } from "../type";
 
 export const useBookMarkToggle = (post: Post) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(
-    post?.isBookmarkedByMe
+    post?.isBookmarked
   );
 
   useEffect(() => {
-    setIsBookmarked(post?.isBookmarkedByMe);
+    setIsBookmarked(post?.isBookmarked);
   }, [post]);
   const toggleBookMark = async () => {
     const previousState = isBookmarked;

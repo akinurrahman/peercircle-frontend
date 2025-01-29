@@ -1,31 +1,28 @@
 "use client";
-
 import React from "react";
-
-import PostCard from "../components/post-card";
+import Skeleton from "../components/card/skeleton";
 import { useFetchPosts } from "../hooks/useFetchPosts";
-import PostSkeleton from "../components/post-card/post-skeleton";
+import PostCard from "../components/card";
 
-const Posts: React.FC = () => {
+const Post = () => {
   const { isLoading, posts } = useFetchPosts();
 
   if (isLoading) {
     return (
       <div className="mx-auto my-5 max-w-lg px-4 py-8">
         {[...Array(10)].map((_, index) => (
-          <PostSkeleton key={index} />
+          <Skeleton key={index} />
         ))}
       </div>
     );
   }
-
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       {posts?.map((post) => (
-        <PostCard key={post._id} post={post} isLoading={isLoading} />
+        <PostCard key={post._id} item={post} type="post" />
       ))}
     </div>
   );
 };
 
-export default Posts;
+export default Post;

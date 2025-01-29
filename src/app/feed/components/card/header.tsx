@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { Post, Product } from "../../type";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CardHeader } from "@/components/ui/card";
@@ -8,29 +10,27 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MoreHorizontal } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { Post } from "../../hooks/useFetchPosts";
 import Link from "next/link";
+import { getInitials } from "@/utils";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { profileApis } from "@/services/apis/profile/profile.api";
-import { getInitials } from "@/utils";
-import { Badge } from "@/components/ui/badge";
 
-interface HeaderProps {
-  post: Post;
+interface Props {
+  item: Post | Product;
 }
 
-const Header: React.FC<HeaderProps> = ({ post }) => {
-  const [isFollowing, setIsFollowing] = useState<boolean>(post?.isFollowing);
+const Header: React.FC<Props> = ({ item }) => {
+  const [isFollowing, setIsFollowing] = useState<boolean>(item?.isFollowing);
   useEffect(() => {
-    setIsFollowing(post?.isFollowing);
-  }, [post]);
+    setIsFollowing(item?.isFollowing);
+  }, [item]);
 
   const toggleIsFollowing = async () => {
     try {
       const response = await profileApis.followUnfollow.updateOne(
-        post.authorId,
+        item.author._id,
         {
           isFollowing: !isFollowing,
         }
@@ -40,28 +40,29 @@ const Header: React.FC<HeaderProps> = ({ post }) => {
       toast.error(getErrorMessage(error));
     }
   };
-
   return (
     <CardHeader className="flex flex-row items-center space-y-0 p-4">
-      <Link href={post.isMine ? "/profile" : `/profile/${post.authorId}`}>
+      <Link href={item.isMine ? "/profile" : `/profile/${item.author._id}`}>
         <Avatar className="size-10 cursor-pointer border-2 border-primary">
           <AvatarImage
-            src={post.profilePicture}
-            alt={`${post.authorName}'s avatar`}
+            src={item.author.profilePicture}
+            alt={`${item.author.fullName}'s avatar`}
           />
-          <AvatarFallback>{getInitials(post?.authorName)}</AvatarFallback>
+          <AvatarFallback>{getInitials(item?.author.fullName)}</AvatarFallback>
         </Avatar>
       </Link>
       <div className="ml-3 flex grow">
         <div>
-          <p className="text-sm font-semibold">{post.authorName}</p>
-          <p className="text-xs text-muted-foreground">@{post.username}</p>
+          <p className="text-sm font-semibold">{item.author.fullName}hello</p>
+          <p className="text-xs text-muted-foreground">
+            @{item.author.username}
+          </p>
         </div>
-        <div className={`${post.isMine ? "ml-4 block" : "hidden"}`}>
+        <div className={`${item.isMine ? "ml-4 block" : "hidden"}`}>
           <Badge>Author</Badge>
         </div>
       </div>
-      {!post.isMine && (
+      {!item.isMine && (
         <Button
           variant={isFollowing ? "secondary" : "default"}
           size="sm"

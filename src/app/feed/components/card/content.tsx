@@ -1,9 +1,7 @@
-"use client";
-
+import { Post, Product } from "../../type";
 import { CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
-import { Post } from "../../hooks/useFetchPosts";
 import {
   Carousel,
   CarouselContent,
@@ -12,16 +10,16 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-interface MainContentProps {
-  post: Post;
+interface Props {
+  item: Post | Product;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ post }) => {
+const MainContent: React.FC<Props> = ({ item }) => {
   return (
     <CardContent className="p-0">
       <Carousel className="relative w-full">
         <CarouselContent>
-          {post.mediaUrls.map((url, idx) => (
+          {item.mediaUrls.map((url, idx) => (
             <CarouselItem key={url + idx}>
               <div
                 className="relative w-full overflow-hidden rounded-md"
