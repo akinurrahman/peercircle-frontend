@@ -5,9 +5,7 @@ import { feedApis } from "@/services/apis/feed/feed.api";
 import { Post } from "../type";
 
 export const useBookMarkToggle = (post: Post) => {
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(
-    post?.isBookmarked
-  );
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(post?.isBookmarked);
 
   useEffect(() => {
     setIsBookmarked(post?.isBookmarked);

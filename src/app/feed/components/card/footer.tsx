@@ -11,25 +11,27 @@ import { getInitials } from "@/utils";
 import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { useComments } from "../../hooks/useComments";
 import { Post, Product } from "../../type";
 import BuyNow from "./buy-now";
 import CommentModal from "./comment-modal";
+import { useComments } from "../../hooks/useComments";
 
 interface Props {
   item: Post | Product;
-  type: "post" | "product";
+  type: "Post" | "Product";
 }
 
 const Footer: React.FC<Props> = ({ item, type }) => {
   const [openItemId, setOpenItemId] = useState<string | null>(null);
+  const [commentInput, setCommentInput] = useState<string>("");
   // const { isBookmarked, toggleBookMark } = useBookMarkToggle(item);
   // const { isLiked, likeCount, toggleLike } = useLikeToggle(item);
-  const { commentInput, setCommentInput, addComment } = useComments();
+  const { addComment } = useComments();
 
   const { fullName, profilePicture } = useSelector(
     (state: RootState) => state.profile.basicProfile
   );
+
   return (
     <CardFooter className="flex flex-col items-start p-4">
       <div className="mb-2 flex w-full justify-between">
@@ -38,13 +40,10 @@ const Footer: React.FC<Props> = ({ item, type }) => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={()=>{}}
+              onClick={() => {}}
               className={true ? "text-red-500" : ""}
             >
-              <Heart
-                className="size-6"
-                fill={true ? "currentColor" : "none"}
-              />
+              <Heart className="size-6" fill={true ? "currentColor" : "none"} />
             </Button>
           </TooltipWrapper>
           <TooltipWrapper content="Comment">
@@ -58,12 +57,12 @@ const Footer: React.FC<Props> = ({ item, type }) => {
             </Button>
           </TooltipWrapper>
         </div>
-        {type === "post" ? (
+        {type === "Post" ? (
           <TooltipWrapper content={true ? "Unsave" : "Save"}>
             <Button
               variant="ghost"
               size="icon"
-              onClick={()=>{}}
+              onClick={() => {}}
               className={true ? "text-yellow-500" : ""}
             >
               <Bookmark
@@ -79,7 +78,14 @@ const Footer: React.FC<Props> = ({ item, type }) => {
       <p className="mb-1 text-sm font-semibold">{"55"} likes</p>
       <p className="text-sm">
         <span className="font-semibold">{item?.author.username} </span>
-        {/* {item.caption || item.name} */}
+        <span>
+          {type === "Post" ? (item as Post).caption : (item as Product).name}
+        </span>
+        {type === "Product" && (
+          <p className="line-clamp-2 text-xs">
+            {(item as Product).description}
+          </p>
+        )}
       </p>
 
       <Button
@@ -94,6 +100,7 @@ const Footer: React.FC<Props> = ({ item, type }) => {
       {openItemId === item?._id && (
         <CommentModal
           postId={item._id}
+          type={type}
           open={true}
           onOpenChange={() => setOpenItemId(null)}
         />
@@ -119,7 +126,7 @@ const Footer: React.FC<Props> = ({ item, type }) => {
         <Button
           variant="ghost"
           className="font-semibold text-primary"
-          onClick={() => addComment(item._id)}
+          onClick={() => addComment(commentInput, type, item._id)}
         >
           Post
         </Button>

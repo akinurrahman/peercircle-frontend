@@ -7,7 +7,7 @@ import Footer from "./footer";
 
 interface CardProps {
   item: Post | Product;
-  type: "post" | "product";
+  type: "Post" | "Product";
 }
 
 const CardComponent: React.FC<CardProps> = ({ item, type }) => {

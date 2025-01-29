@@ -19,7 +19,7 @@ const Post = () => {
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       {posts?.map((post) => (
-        <PostCard key={post._id} item={post} type="post" />
+        <PostCard key={post._id} item={post} type="Post" />
       ))}
     </div>
   );

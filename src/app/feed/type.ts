@@ -16,7 +16,7 @@ export interface Post {
   isFollowing: boolean;
   likeCount: number;
   commentCount: number;
-  type: "post";
+  type: "Post";
   isMine: boolean;
 }
 
@@ -30,9 +30,25 @@ export interface Product {
   isFollowing: boolean;
   likeCount: number;
   commentCount: number;
-  type: "product";
+  type: "Product";
   isMine: boolean;
   author: User;
 }
 
 export type FeedItem = Post | Product;
+
+export interface Comment {
+  _id: string;
+  text: string;
+  author: {
+    _id: string;
+    email: string;
+    fullName: string;
+    profilePicture?: string;
+  };
+  refType: "Post" | "Product";
+  refId: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

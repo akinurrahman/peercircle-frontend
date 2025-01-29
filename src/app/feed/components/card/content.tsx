@@ -35,8 +35,12 @@ const MainContent: React.FC<Props> = ({ item }) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute-y-center left-3 z-10" />
-        <CarouselNext className="absolute-y-center right-3 z-10" />
+        {item.mediaUrls.length > 1 && (
+          <>
+            <CarouselPrevious className="absolute-y-center left-3 z-10" />
+            <CarouselNext className="absolute-y-center right-3 z-10" />
+          </>
+        )}
       </Carousel>
     </CardContent>
   );

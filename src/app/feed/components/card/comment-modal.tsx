@@ -13,54 +13,36 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, ThumbsUp } from "lucide-react";
 import moment from "moment";
-import { useComments } from "../../hooks/useComments";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getInitials } from "@/utils";
+import { useComments } from "../../hooks/useComments";
 
 interface ModalProps {
   postId: string;
   open: boolean;
+  type: "Post" | "Product";
   onOpenChange: (open: boolean) => void;
 }
 
 export default function CommentModal({
   postId,
+  type,
   open,
   onOpenChange,
 }: ModalProps) {
-  const {
-    commentInput,
-    setCommentInput,
-    addComment,
-    comments,
-    replyInput,
-    setReplyInput,
-    fetchComments,
-    isFetchingComments,
-  } = useComments();
+  const [commentInput, setCommentInput] = useState<string>("");
+
+  const { comments, fetchComments, addComment, isPending } = useComments();
 
   const { profilePicture, fullName } = useSelector(
     (state: RootState) => state.profile.basicProfile
   );
 
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-
   useEffect(() => {
-    fetchComments(postId);
-  }, [postId, fetchComments]);
-
-  const handleReply = (commentId: string) => {
-    setReplyingTo(commentId);
-  };
-
-  const submitReply = () => {
-    if (replyingTo) {
-      addComment(postId, replyingTo);
-      setReplyingTo(null);
-    }
-  };
+    fetchComments(type, postId);
+  }, [fetchComments, type, postId]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -89,12 +71,12 @@ export default function CommentModal({
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
             />
-            <Button onClick={() => addComment(postId)}>
+            <Button onClick={() => addComment(commentInput, type, postId)}>
               <Send size={16} />
             </Button>
           </div>
           <ScrollArea className="h-[400px] w-full pr-4 pt-3">
-            {isFetchingComments
+            {isPending
               ? Array.from({ length: 10 }).map((_, index) => (
                   <div key={index} className="mb-6 flex items-start space-x-4">
                     <Skeleton className="size-10 rounded-full" />
@@ -113,45 +95,45 @@ export default function CommentModal({
                     <div className="flex items-start space-x-4">
                       <Avatar>
                         <AvatarImage
-                          src={comment.userId.profilePicture}
-                          alt={comment.userId.fullName}
+                          src={comment.author?.profilePicture}
+                          alt={comment.author?.fullName}
                           className="object-cover"
                         />
                         <AvatarFallback>
-                          {comment.userId.fullName.charAt(0)}
+                          {getInitials(comment.author?.fullName)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center">
                           <p className="font-semibold">
-                            {comment.userId.fullName}
+                            {comment.author.fullName}
                           </p>
                           <span className="ml-2 text-xs text-muted-foreground">
                             {moment(comment.createdAt).fromNow()}
                           </span>
                         </div>
-                        <p className="text-sm">{comment.comment}</p>
+                        <p className="text-sm">{comment.text}</p>
                         <div className="flex items-center space-x-2 text-sm">
-                          <Button
+                          {/* <Button
                             variant="ghost"
                             size="sm"
                             className="text-muted-foreground hover:text-foreground"
                           >
                             <ThumbsUp size={14} className="mr-1" />
-                          </Button>
-                          <Button
+                          </Button> */}
+                          {/* <Button
                             variant="ghost"
                             size="sm"
                             className="text-muted-foreground hover:text-foreground"
                             onClick={() => handleReply(comment._id)}
                           >
                             Reply
-                          </Button>
+                          </Button> */}
                         </div>
                       </div>
                     </div>
 
-                    {replyingTo === comment._id && (
+                    {/* {replyingTo === comment._id && (
                       <div className="ml-12 mt-2 flex items-center gap-4">
                         <Avatar>
                           <AvatarImage
@@ -170,9 +152,9 @@ export default function CommentModal({
                           <Send size={16} />
                         </Button>
                       </div>
-                    )}
+                    )} */}
 
-                    {comment.replies?.map((reply) => (
+                    {/* {comment.replies?.map((reply) => (
                       <div
                         key={reply._id}
                         className="ml-12 mt-2 flex items-start space-x-4"
@@ -199,7 +181,7 @@ export default function CommentModal({
                           <p className="text-sm">{reply.comment}</p>
                         </div>
                       </div>
-                    ))}
+                    ))} */}
                   </div>
                 ))}
           </ScrollArea>

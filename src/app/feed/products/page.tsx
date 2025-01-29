@@ -19,7 +19,7 @@ const Post = () => {
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       {products?.map((product) => (
-        <ProductCard key={product._id} item={product} type="product" />
+        <ProductCard key={product._id} item={product} type="Product" />
       ))}
     </div>
   );
