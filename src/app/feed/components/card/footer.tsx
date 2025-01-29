@@ -24,8 +24,9 @@ interface Props {
 const Footer: React.FC<Props> = ({ item, type }) => {
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [commentInput, setCommentInput] = useState<string>("");
-  // const { isBookmarked, toggleBookMark } = useBookMarkToggle(item);
-  // const { isLiked, likeCount, toggleLike } = useLikeToggle(item);
+  const { isBookmarked, toggleBookMark } = useBookMarkToggle(item as Post);
+
+  const { isLiked, likeCount, toggleLike } = useLikeToggle(item);
   const { addComment } = useComments();
 
   const { fullName, profilePicture } = useSelector(
@@ -36,14 +37,17 @@ const Footer: React.FC<Props> = ({ item, type }) => {
     <CardFooter className="flex flex-col items-start p-4">
       <div className="mb-2 flex w-full justify-between">
         <div className="flex space-x-2">
-          <TooltipWrapper content={true ? "Unlike" : "Like"}>
+          <TooltipWrapper content={isLiked ? "Unlike" : "Like"}>
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {}}
-              className={true ? "text-red-500" : ""}
+              onClick={() => toggleLike(type)}
+              className={isLiked ? "text-red-500" : ""}
             >
-              <Heart className="size-6" fill={true ? "currentColor" : "none"} />
+              <Heart
+                className="size-6"
+                fill={isLiked ? "currentColor" : "none"}
+              />
             </Button>
           </TooltipWrapper>
           <TooltipWrapper content="Comment">
@@ -58,16 +62,16 @@ const Footer: React.FC<Props> = ({ item, type }) => {
           </TooltipWrapper>
         </div>
         {type === "Post" ? (
-          <TooltipWrapper content={true ? "Unsave" : "Save"}>
+          <TooltipWrapper content={isBookmarked ? "Unsave" : "Save"}>
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {}}
-              className={true ? "text-yellow-500" : ""}
+              onClick={toggleBookMark}
+              className={isBookmarked ? "text-yellow-500" : ""}
             >
               <Bookmark
                 className="size-6"
-                fill={true ? "currentColor" : "none"}
+                fill={isBookmarked ? "currentColor" : "none"}
               />
             </Button>
           </TooltipWrapper>
@@ -75,7 +79,7 @@ const Footer: React.FC<Props> = ({ item, type }) => {
           <BuyNow profileId={item.author?._id} />
         )}
       </div>
-      <p className="mb-1 text-sm font-semibold">{"55"} likes</p>
+      <p className="mb-1 text-sm font-semibold">{likeCount} likes</p>
       <p className="text-sm">
         <span className="font-semibold">{item?.author.username} </span>
         <span>

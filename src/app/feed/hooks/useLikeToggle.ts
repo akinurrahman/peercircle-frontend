@@ -2,21 +2,23 @@ import { feedApis } from "@/services/apis/feed/feed.api";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Post } from "../type";
+import { Post, Product } from "../type";
 
-export const useLikeToggle = (post: Post) => {
-  const [isLiked, setIsLiked] = useState<boolean>(post?.isLiked);
-  const [likeCount, setLikeCount] = useState<number>(post?.likeCount);
+export const useLikeToggle = (item: Post | Product) => {
+  const [isLiked, setIsLiked] = useState<boolean>(item?.isLiked);
+  const [likeCount, setLikeCount] = useState<number>(item?.likeCount);
   useEffect(() => {
-    setIsLiked(post?.isLiked);
-    setLikeCount(post?.likeCount);
-  }, [post]);
+    setIsLiked(item?.isLiked);
+    setLikeCount(item?.likeCount);
+  }, [item]);
 
-  const toggleLike = async () => {
+  const toggleLike = async (refType: "Post" | "Product") => {
     const previousState = isLiked;
     setIsLiked(!isLiked);
     try {
-      const response = await feedApis.toggleLike.updateOne(post._id, {});
+      const response = await feedApis.toggleLike.updateOne(item._id, {
+        refType,
+      });
       setIsLiked(response?.isLiked);
       setLikeCount(response?.likeCount);
     } catch (error) {
