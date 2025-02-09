@@ -53,7 +53,7 @@ const Header: React.FC<Props> = ({ item }) => {
       </Link>
       <div className="ml-3 flex grow">
         <div>
-          <p className="text-sm font-semibold">{item.author.fullName}hello</p>
+          <p className="text-sm font-semibold">{item.author.fullName}</p>
           <p className="text-xs text-muted-foreground">
             @{item.author.username}
           </p>
